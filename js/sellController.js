@@ -36,8 +36,6 @@ app.controller('PerfumeALL', function($scope, $http) {
         }
     };
 
-    $scope.test="testing git";
-    //ppp
     $scope.getAllEssence = function(){
         var url="../php/getAll.php";
         var data = {"function":"getAllEssence"};
