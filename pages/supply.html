@@ -1,0 +1,267 @@
+<html>
+<head>
+    <title>المؤن</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../bootstrap-3-arabic-master/dist/css/bootstrap-arabic.min.css">
+    <script src="../js/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../design/sweetAlert/sweetalert.css">
+    <script src="../design/sweetAlert/sweetalert.js"></script>
+    <script src="../design/sweetAlert/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../design/mainNav.css">
+    <link rel="stylesheet" type="text/css" href="../design/supply.css">
+    <script src="../jquery/jquery.min.js"></script>
+    <script src="../bootstrap-3-arabic-master/dist/js/bootstrap-arabic.min.js"></script>
+    <script src="../js/animatescroll.min.js"></script>
+    <!-- <script src="../js/mainPage.js"></script> -->
+    <script src="../js/supply.js"></script>
+    <script src="../js/supplyController.js"></script>
+    <link rel="stylesheet" type="text/css" href="../jquery/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+    <script src="../jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+</head>
+<body>
+    <div class="navigationBar">
+        <div class="col-xs-12">
+            <nav class="links navbar-default">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class=""><a name="sell" class="link" href="sell.html">بيع</a></li>
+                    <li class=""><a name="drawer" class="link" href="drawer.html">صندوق</a></li>
+                    <li class=""><a name="stock" class="link" href="stock.html">المخزون</a></li>
+                    <li class=""><a name="history" class="link" href="history.html">الفواتير</a></li>
+                    <li class=""><a name="definitionPerfume" class="link" href="definitionPerfume.html">تعريف عطر</a></li>
+                    <li class="btn-info"><a name="supply" class="activeLink" href="#">المؤن</a></li>
+                    <li class=""><a name="client" class="link" href="client.html">زبون / مورد</a></li>
+                    <li class=""><a name="damage" class="link" href="damage.html">تلف</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div ng-app="PERFUME">
+        <div ng-controller="SupplyALL">
+            <div class="col-xs-12">
+               <div class="filter">
+                    <button name="items" class="col-xs-6 supplyItems col btn btn-default">مكونات عطر</button>
+                    <button name="accessories" class="col-xs-6 supplyAccessories col btn btn-default">إكسسورات</button>
+                </div>
+            </div>
+            <div class="modal fade" id="addModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">{{add_titleName}}</h4>
+                        </div>
+                        <form>
+                            <div class="modal-body">
+                                <label>{{add_labelName}}: </label><!-- <span id="infoSpan"> تركيبة هذا العطر موجود! </span></br> ng-change="checkPerfumeName(newNameVal)" ng-model="newNameVal" -->
+                                <input class="form-control mousetrap" ng-model="add" type="text" id="add"/>
+                                <div id="bottleCapacity">
+                                    <label>السعة: </label>
+                                    <input class="form-control mousetrap" ng-model="capacity" type="number" min="0" onkeyup="check_number(this);" id="capacity"/>
+                                </div>
+                                <!-- <input ng-model="nameId" type="hidden"/> -->
+                            </div>
+                            <div class="modal-footer" style="">
+                                <button style="margin-right: 5px;" ng-click="addName()" class ="btn btn-success form-control" type="button" data-dismiss="">تسجيل</button>
+                                <button class="btn btn-danger form-control" type="button" data-dismiss="modal" >إلغاء</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 tabcontent" id="supplyItemsInput">
+                <form>
+                    <div>
+                        <input style="margin-bottom: 10px; font-size: 18px;color: black;" type ="button" class="col-xs-6 btn btn-success mousetrap"  data-toggle="modal" ng-click="addEssenceName_Modal()" value="+ تعريف اسانس جديد +"/>
+                        <input style="margin-bottom: 10px; font-size: 18px;color: black;" type ="button" class="col-xs-6 btn btn-success mousetrap"  data-toggle="modal" ng-click="addBottleType_Modal()" value="+ تعريف قنينة جديدة +"/>
+                    </div>
+                </form>
+                <table  id="supplyItemsInput" class="table table-responsive table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: middle;" class="text-center">النوع</th>
+                            <th style="vertical-align: middle;" class="text-center">الإسم</th>
+                            <th style="vertical-align: middle;" class="text-center">الكمية</th>
+                            <th style="vertical-align: middle;" class="text-center">سعر الشراء</th>
+                            <th style="vertical-align: middle;" class="text-center">سعر البيع</th>
+                            <th style="vertical-align: middle;" class="text-center">المجموع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form>
+                            <tr ng-repeat="col in rowsItems" class="rowItems">
+                                <td style="vertical-align: middle;">
+                                    <select name="itemsType" id="type{{$index}}" ng-model="col.type" class="form-control mousetrap">
+                                        <option value="essence">اسانس</option>
+                                        <option value="alcohol">كحول</option>
+                                        <option value="bottle">قناني</option>
+                                    </select>
+                                </td>
+                                <td style="vertical-align: middle;" class="inputVide{{$index}}" ng-show="col.type==''">
+                                    <input id="nameVide{{$index}}" ng-model="col.name" class="form-control mousetrap" type="text" placeholder="الإسم"/>
+                                </td>
+                                <td style="vertical-align: middle;" class="inputEssence{{$index}}" ng-show="col.type=='essence'">
+                                    <input id="nameEssence{{$index}}" ng-model="col.name" list="listEssence{{$index}}" class="form-control mousetrap" type="text" placeholder="الإسم"/>
+                                    <datalist id="listEssence{{$index}}">
+                                        <option ng-repeat="e in allEssence" data-id="{{e.id}}" value="{{e.name}}">
+                                    </datalist>
+                                </td>
+                                <td style="vertical-align: middle;" class="inputAlcohol{{$index}}" ng-show="col.type=='alcohol'">
+                                    <input id="nameAlcohol{{$index}}" ng-model="col.name" ng-value="'كحول'" class="form-control mousetrap" type="text" placeholder="الإسم" disabled/>
+                                </td>
+                                <td style="vertical-align: middle;" class="inputBottle{{$index}}" ng-show="col.type=='bottle'">
+                                    <input id="nameBottle{{$index}}" ng-model="col.name" list="listBottle{{$index}}" class="form-control mousetrap" type="text" placeholder="الإسم" />
+                                    <datalist id="listBottle{{$index}}">
+                                        <option ng-repeat="b in allBottle" data-capacity="{{b.capacity}}" data-type="{{b.name}}" data-id="{{b.id}}" value="{{b.name}} | {{b.capacity}}">
+                                    </datalist>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='alcohol' || col.type=='essence' || col.type==''">
+                                    <input id="itemsQuantity{{$index}}" ng-model="col.quantity" ng-change="priceItemsRow($index)" class="form-control mousetrap" type="number" min="0" placeholder="لتر"/>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='alcohol' || col.type=='essence' || col.type==''">
+                                    <input id="itemsCost" ng-model="col.cost" class="form-control mousetrap" type="number" min="0" placeholder="/لتر" ng-change="priceItemsRow($index)"/>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='alcohol' || col.type=='essence' || col.type==''">
+                                    <input id="itemsSelling" ng-model="col.selling" class="form-control mousetrap" type="number" min="0"  placeholder="/لتر"/>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='bottle'">
+                                    <input id="itemsQuantity{{$index}}" ng-model="col.quantity" ng-change="priceItemsRow($index)" class="form-control mousetrap" type="number" min="0" placeholder="القطعة"/>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='bottle'">
+                                    <input id="itemsCost" ng-model="col.cost" class="form-control mousetrap" type="number" min="0" placeholder="/القطعة" ng-change="priceItemsRow($index)"/>
+                                </td>
+                                <td style="vertical-align: middle;" ng-show="col.type=='bottle'">
+                                    <input id="itemsSelling" ng-model="col.selling" class="form-control mousetrap" type="number" min="0"  placeholder="/القطعة"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="itemsPrice{{$index}}" ng-model="col.price" class="form-control mousetrap" type="number" min="0" placeholder="الكمية * سعر الشراء" ng-change="changeTotalPriceItems()"/>
+                                </td>
+                            </tr>
+                            <tr class="newRowItems">
+                                <td colspan="6" ng-click="addRowItems()" style="vertical-align: middle;font-size:20px;" class="col-xs-6 btn btn-info">سطر جديد</td>
+                            </tr>
+                            <tr>
+                                <th colspan="6" style="padding: 0px 0px 0px 0px;"><div style="border:solid black 3px;"></th>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle;" rowspan="2">
+                                    <input id="supplierName_items" ng-model="supplierName_items" list="listSupplierName_items" class="form-control mousetrap" type="text" placeholder="إسم المورد"/>
+                                </td>
+                                <datalist id="listSupplierName_items">
+                                    <option ng-repeat="s in allSupplier" data-id="{{s.id}}" value="{{s.name}}">
+                                </datalist>                                
+                                <!-- <th style="vertical-align: middle;" rowspan="2"></th> -->
+                                <th style="vertical-align: middle;" class="text-center">رقم:</th>
+                                <th style="vertical-align: middle;" class="text-center">
+                                    <strong><label id="BIToBe"></label></strong>
+                                </th>
+                                <th style="vertical-align: middle;" class="text-center" rowspan="">مجموع الشراء: </th>
+                                <th style="vertical-align: middle;" class="text-center" colspan="2">{{totalPriceItems}}</th>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: middle;" class="text-center">تاريخ:</th>
+                                <th style="vertical-align: middle;" class="text-center">
+                                    <input id="supplyDate_items" ng-model="supplyDate_items" class="form-control text-center mousetrap" type="text" tabindex="150"/>
+                                </th>
+                                <th style="vertical-align: middle;" class="text-center" rowspan="">المبلغ المدفوع: </th>
+                                <td colspan="2">
+                                    <input type="number" min="0" id="payPrice_items" ng-model="payPrice_items" ng-value="totalPriceItems" class="form-control text-center mousetrap" placeholder="المبلغ المدفوع"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td ng-click="addSupplyItems();" colspan="6" class="btn col-xs-6 btn-success" style="vertical-align: middle; font-size:20px;">إدخال</td>
+                            </tr>
+                            <tr>
+                                <td id="cancel" ng-click="cancelSupplyItems();" colspan="6" class="btn col-xs-6 btn-danger" style="vertical-align: middle; font-size:20px;">إلغاء</td>
+                            </tr>
+                        </form>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 tabcontent" id="supplyAccessoriesInput">
+                <form>
+                    <div>
+                        <input style="margin-bottom: 10px; font-size: 18px;color: black;" type ="button" class="col-xs-12 btn btn-success mousetrap"  data-toggle="modal" ng-click="addAccessoriesName_Modal()" value="+ تعريف اسم اكسسوار جديد +"/>
+                    </div>
+                </form>
+                <table class="table table-responsive table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: middle;" class="text-center">إسم الإكسسوار</th>
+                            <th style="vertical-align: middle;" class="text-center">الكمية</th>
+                            <th style="vertical-align: middle;" class="text-center">سعر الشراء</th>
+                            <th style="vertical-align: middle;" class="text-center">سعر البيع</th>
+                            <th style="vertical-align: middle;" class="text-center">تاريخ الإنتهاء</th>
+                            <th style="vertical-align: middle;" class="text-center">مجموع</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form>
+                            <tr ng-repeat="col in rowsAccessories" class="rowsAccessories">
+                                <td style="vertical-align: middle;">
+                                    <input id="accessoriesName" ng-model="col.name" list="listAccessories" class="form-control mousetrap" type="text" placeholder="الإسم"/>
+                                    <datalist id="listAccessories">
+                                        <option ng-repeat="a in allAccessories" data-id="{{a.id}}" value="{{a.name}}">
+                                    </datalist>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="accessoriesQuantity" ng-model="col.quantity" class="form-control mousetrap" type="number" min="0" placeholder="القطع" ng-change="priceAccessoriesRow($index)"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="accessoriesCost" ng-model="col.cost" class="form-control mousetrap" type="number" min="0" placeholder="/القطعة" ng-change="priceAccessoriesRow($index)"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="accessoriesSelling" ng-model="col.selling" class="form-control mousetrap" type="number" min="0" placeholder="/القطعة"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="expirationDate{{$index}}" class="form-control mousetrap expirationDate" type="text" placeholder="" ng-model="expirationDate"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <input id="accessoriesPrice{{$index}}" ng-model="col.price" class="form-control mousetrap" type="number" min="0" ng-change="changeTotalPriceAccessories();" placeholder="الكمية * سعر الشعراء"/>
+                                </td>
+                            </tr>
+                            <tr class="newRowAccessories">
+                                <td colspan="6" ng-click="addRowAccessories()" style="vertical-align: middle;font-size:20px;" class="btn col-xs-6 btn-info">سطر جديد</td>
+                            </tr>
+                            <tr>
+                                <th colspan="6" style="padding: 0px 0px 0px 0px;"><div style="border:solid black 3px;"></th>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle;" colspan="2" rowspan="2">
+                                    <input id="supplierName_accessories" ng-model="supplierName_accessories" list="listSupplierName_accessories" class="form-control mousetrap" type="text" placeholder="إسم المورد"/>
+                                </td>
+                                <datalist id="listSupplierName_accessories">
+                                      <option ng-repeat="s in allSupplier" data-id="{{s.id}}" value="{{s.name}}">
+                                </datalist>
+                                <!-- <th rowspan="2"></th> -->
+                                <th style="vertical-align: middle;" class="text-center"> رقم: </th>
+                                <th style="vertical-align: middle;" class="text-center">
+                                    <strong><label id="BAToBe"></label></strong>
+                                </th>
+                                <th style="vertical-align: middle;" class="text-center">مجموع الشراء:</th>
+                                <th style="vertical-align: middle;" class="text-center">{{totalPriceAccessories}}</th>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: middle;" class="text-center">تاريخ: </th>
+                                <th style="vertical-align: middle;" class="text-center">
+                                    <strong><input id="supplyDate_accessories" ng-model="supplyDate_accessories" class="form-control text-center mousetrap" type="text" tabindex="150"/></strong>
+                                </th>
+                                <th style="vertical-align: middle;" class="text-center">المبلغ المدفوع: </th>
+                                <td style="vertical-align: middle;">
+                                    <input type="number" min="0" id="payPrice_accessories" ng-value="totalPriceAccessories" class="form-control text-center mousetrap" placeholder="المبلغ المدفوع"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  ng-click="addSupplyAccessories();" colspan="6" class="btn col-xs-6 btn-success" style="vertical-align:middle; font-size:20px;">إدخال</td>
+                            </tr>
+                            <tr>
+                                <td id="cancel" ng-click="cancelSupplyAccessories();" colspan="6" class="btn col-xs-6 btn-danger" style="vertical-align: middle; font-size:20px;">إلغاء</td>
+                            </tr>
+                        </form>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+body{
+	background-color:#B0C4DE;
+}
+.showHidebttn{
+	width: 100%;
+}
+.changethisone input{
+    border-right-style:none;
+    /*height: 40px;*/
+    border-radius: 10px;
+    font-size: 15pt;
+}
+.changethisone span{
+    background-color: #FFF;
+    border-radius: 10px;
+}
+.form-control{
+	color: black;
+}
+.filter button{
+	margin-bottom: 10px;
+	height: 40px;
+	margin-top: 20px;
+	font-size: 20px;
+	border-radius: 5px;
+	color:black;
+}
+label, .btn-success, .btn-danger{
+	font-size: 17px;
+
+}
+
