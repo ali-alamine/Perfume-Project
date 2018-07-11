@@ -1,8 +1,6 @@
 var app = angular.module('PERFUME', []);
 // var definitionPerfumeTable;
 app.filter('reverse', function() {
-
-    $scope.test = "test";
     return function(items) {
     if (!items || !items.length) { return; }
     return items.slice().reverse();
