@@ -35,6 +35,8 @@ app.controller('PerfumeALL', function($scope, $http) {
             this.$apply(fn);
         }
     };
+
+    $scope.test="testing git";
     $scope.getAllEssence = function(){
         var url="../php/getAll.php";
         var data = {"function":"getAllEssence"};
