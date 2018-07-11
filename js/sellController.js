@@ -6,7 +6,7 @@ app.filter('reverse', function() {
     return items.slice().reverse();
     };
 });
-app.controller('PerfumeALL', function($scope, $http) {
+app.controller('PerfumeALL', function($scope) {
     var id_total_drawer=localStorage.getItem('id_total_drawerKey');
     $scope.facture=[];
     var nbRow=0;
