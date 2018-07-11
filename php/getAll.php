@@ -3,7 +3,7 @@ include('phpDB/connection.php');
 include('phpDB/getAllDB.php');
 $function = $_GET['function'];
 switch($function){
-	case 'getAllEssence' :
+    case 'getAllEssence' :
         openConn();
         getAllEssence();
         closeConn();

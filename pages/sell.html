@@ -1,17 +1,17 @@
 <html>
 <head>
     <title>بيع</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../bootstrap-3-arabic-master/dist/css/bootstrap-arabic.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../bootstrap-3-arabic-master/dist/css/bootstrap-arabic.min.css">
     <script src="../js/angular.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../design/sweetAlert/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="../design/sweetAlert/sweetalert.css">
     <script src="../design/sweetAlert/sweetalert.js"></script>
     <script src="../design/sweetAlert/sweetalert.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../design/mainNav.css">
     <link rel="stylesheet" type="text/css" href="../design/sell.css">
     <script src="../jquery/jquery.min.js"></script>
-	<script src="../bootstrap-3-arabic-master/dist/js/bootstrap-arabic.min.js"></script>
+    <script src="../bootstrap-3-arabic-master/dist/js/bootstrap-arabic.min.js"></script>
     <!-- <script src="../js/totaldrawer.js"></script> -->
     <script src="../js/sell.js"></script>
     <script src="../js/sellController.js"></script>
@@ -61,10 +61,10 @@
                                                     <td style="padding: 3px; font-size: 13px;"><label>إسم الزبون: </label></td>
                                                     <td style="font-size: 13px;">
                                                         <strong>
-                                                            <input class="text-center mousetrap" type="text" id="clientName" list="clientNameList" ng-model="clientData"/>
+                                                            <input class="text-center mousetrap" type="text" id="clientName" list="clientNameList" ng-change="getSearchClient();" ng-model="clientData"/>
                                                         </strong>
                                                         <datalist id="clientNameList">
-                                                            <option ng-repeat="c in allClient | orderBy:sort | reverse" data-phone="{{c.phone}}" data-id="{{c.id}}" value="{{c.name}}" ng-click="DataClient = c">
+                                                            <option ng-repeat="c in getClient" data-phone="{{c.phone}}" data-id="{{c.id}}" value="{{c.name}}">
                                                         </datalist>
                                                     </td>
                                                 </tr>
@@ -137,12 +137,12 @@
                                 <tr>
                                     <th style="vertical-align: middle;" class="text-center">المبلغ المدفوع: </th>
                                     <td style="vertical-align: middle;">
-                                        <input type="number" id="sellPayPrice" ng-value="{{totalPriceSell}}" class="form-control mousetrap" placeholder="المبلغ المدفوع"/>
+                                        <input type="number" id="sellPayPrice" ng-value="totalPriceSell" class="form-control mousetrap" placeholder="المبلغ المدفوع"/>
                                     </td>
                                     
                                     <th style="vertical-align: middle;" class="text-center">مجموع الفاتورة: </th>
                                     <td style="vertical-align: middle;">
-                                        <input type="number" id="sellTotalPrice" ng-value="{{totalPriceSell}}" class="form-control mousetrap" placeholder="مجموع الفاتورة"/>
+                                        <input type="number" id="sellTotalPrice" ng-value="totalPriceSell" class="form-control mousetrap" placeholder="مجموع الفاتورة"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -171,10 +171,10 @@
                                                         </td>
                                                         <td style="font-size: 13px;">
                                                             <strong>
-                                                                <input class="text-center mousetrap" type="text" id="clientSellsName" list="clientSellsNameList" ng-model="clientSellsData"/>
+                                                                <input class="text-center mousetrap" type="text" id="clientSellsName" list="clientNameList" ng-model="clientData" ng-change="getSearchClient();"/>
                                                             </strong>
-                                                            <datalist id="clientSellsNameList">
-                                                                <option ng-repeat="cs in allClient" data-phone="{{cs.phone}}" data-id="{{cs.id}}" value="{{cs.name}}" ng-click="clientSellsData = cs">
+                                                            <datalist id="clientNameList">
+                                                                <option ng-repeat="cs in getClient" data-phone="{{cs.phone}}" data-id="{{cs.id}}" value="{{cs.name}}" >
                                                             </datalist>
                                                         </td>
                                                     </tr>
@@ -184,7 +184,7 @@
                                                         </td>
                                                         <td style="font-size: 13px;">
                                                             <strong>
-                                                                <input id="clientSellsPhone" class="text-center" type="text" value={{clientSellsPhone}} />
+                                                                <input id="clientPhone" class="text-center" type="text" value={{clientPhone}} />
                                                             </strong>
                                                         </td>
                                                     </tr>
@@ -358,12 +358,8 @@
                                     </td>
                                     <td  style="vertical-align: middle;">
                                         <select class="form-control mousetrap"  ng-model="selectedBottle" ng-options="bot.name+' | '+bot.capacity for bot in allBottle" ng-change="bottleChanged()">
-                                        <option value="">كبس</option></select>
-
-                                        <!-- <select id="nameBottle{{$index}}" ng-model="nameB"  class="form-control mousetrap" type="text" placeholder="الإسم" ng-change="changeSelling($index)">
-                                            <option value="kabbes">كبس</option>
-                                            <option ng-repeat="b in allBottle" ng-class="{'text-danger':b.quantity==0}" data-price="{{b.selling}}" data-cost="{{b.cost}}" data-capacity="{{b.capacity}}" data-name="{{b.name}}" data-id="{{b.id}}" data-quantity="{{b.quantity}}" value="{{b.name}} | {{b.capacity}}">{{b.name}} | {{b.capacity}}</option>
-                                        </select> -->
+                                            <option value="">كبس</option>
+                                        </select>
                                     </td>
                                     <td  style="vertical-align: middle;">
 
@@ -372,13 +368,6 @@
 
                                         <select class="form-control mousetrap"  ng-model="selectedEssence2" ng-options="ess.name for ess in allEssence" ng-change="essence2Changed()">
                                         <option value=""></option></select>
-
-                                      <!--  <select id="nameEssence1{{$index}}" ng-model="nameE1" class="form-control mousetrap" type="text" placeholder="الإسم" ng-change="essenceName1Changed()" >
-                                            <option ng-repeat="e1 in allEssence" ng-class="{'text-danger':e1.quantity==0}" data-price="{{e1.selling}}" data-cost="{{e1.cost}}" data-id="{{e1.id}}" data-quantity="{{e1.quantity}}"  value="{{e1.name}}" >{{e1.name}}</option>
-                                        </select> -->
-                                        <!-- <select id="nameEssence2{{$index}}" ng-model="nameE2" class="form-control mousetrap" type="text" placeholder="الإسم" ng-change="essenceName2Changed()">
-                                            <option ng-repeat="e in allEssence" ng-class="{'text-danger':e.quantity==0}" data-price="{{e.selling}}" data-cost="{{e.cost}}" data-id="{{e.id}}" data-quantity="{{e.quantity}}"  value="{{e.name}}" >{{e.name}}</option>
-                                        </select> -->
                                     </td>
                                     <td  style="vertical-align: middle;">
                                         <input class="form-control mousetrap" id="perfumeEssenceQuantity1K" ng-model="perfumeEssenceQuantity1K" ng-change="essence1QunatityChanged()" type="number" placeholder="ملليلتر" />
@@ -393,6 +382,7 @@
                                     <td style="vertical-align: middle;">
                                         <div style="" class="a">
                                             <input style="width: 80px;" type="number" id="perfumeQuantityFactureK" ng-model="perfumeQuantityFactureK">
+                                            <input type="checkbox" ng-disabled="isKabessNoDisabled" ng-model="checkboxSavePerfume" title="حفظ">
                                             <div style="text-align: middle;" class="b">
                                                 <span ng-click="addFacturePerfumeKabbesData()" class="glyphicon glyphicon-plus btn-success btn addFacturePerfumeKabbbesData" title="تسجيل"></span>
                                             </div>
@@ -422,7 +412,7 @@
                                         <div style="" class="a">
                                             <input style="width: 80px;" type="number" id="perfumeQuantity" ng-model="perfumeQuantity">
                                             <div style="text-align: middle;" class="b">
-                                                <span ng-click="addFacturePerfume()" class="glyphicon glyphicon-plus btn-success btn addFacturePerfume" title="تسجيل"></span>
+                                                <span ng-click="addFacturePerfumeData()" class="glyphicon glyphicon-plus btn-success btn addFacturePerfumeData" title="تسجيل"></span>
                                             </div>
                                         </div>
                                     </td>
@@ -437,9 +427,9 @@
                     <div class="input-group changethisone">
                         <form> 
                             <input id="searchAccessories" ng-model="searchAccessories" list="listAccessories" class="form-control mousetrap" ng-change="getSearchAccessories()" type="text" placeholder="بحث..."/>
-                            <!-- <datalist id="listAccessories">
+                            <datalist id="listAccessories">
                                 <option ng-repeat="a in getAccessories"  data-id="{{a.id}}" value="{{a.name}}" ></option>
-                            </datalist> -->
+                            </datalist>
                             <span class="input-group-addon btn-info" >
                                 <i class="glyphicon glyphicon-search text-primary"></i> 
                             </span> 
@@ -463,16 +453,32 @@
                         </thead>
                         <tbody>
                             <form>
-                                <tr ng-repeat="a in getAccessories">
+                                <tr ng-repeat="a in dAccessories">
                                     <td style="vertical-align: middle;">{{a.name}}</td>
                                     <td  style="vertical-align: middle;" class="inputShowItem">
-                                        <input class="form-control mousetrap" id="accessoriesCost" ng-model="accessoriesSelling" ng-value="{{a.selling}}" type="number" title="سعر التكلفة: {{a.cost}}"/>
+                                        <input class="form-control mousetrap" id="accessoriesSelling" ng-model="accessoriesSelling" ng-value="{{a.selling}}" type="number" title="سعر التكلفة: {{a.cost}}"/>
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <div style="text-align: right;" class="a">
                                             <input style="width: 60px;" class="mousetrap" id='accessoriesQuantity' type="number" ng-model="accessoriesQuantity">
                                             <div class="b">
-                                                <span ng-click="addFactureItemData(a.id)" class="glyphicon glyphicon-plus btn-success btn addFactureItemData" title="تسجيل في الفاطورة"></span>
+                                                <span ng-click="addFactureAccessoriesData('null',a.id,a.name,a.cost)" class="glyphicon glyphicon-plus btn-success btn addFactureAccessoriesData" title="تسجيل في الفاطورة"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </form>   
+                                <form>
+                                <tr ng-repeat="a in getTopAccessories">
+                                    <td style="vertical-align: middle;">{{a.name}}</td>
+                                    <td  style="vertical-align: middle;">
+                                        <input class="form-control mousetrap" id="accessoriesSelling{{$index}}" ng-model="accessoriesSelling" ng-value="{{a.selling}}" type="number" title="سعر التكلفة: {{a.cost}}"/>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div style="text-align: right;" class="a">
+                                            <input style="width: 60px;" class="mousetrap" id='accessoriesQuantity{{$index}}' type="number" ng-model="accessoriesQuantity">
+                                            <div class="b">
+                                                <span ng-click="addFactureAccessoriesData($index,a.id,a.name,a.cost)" class="glyphicon glyphicon-plus btn-success btn addFactureAccessoriesData" title="تسجيل في الفاطورة"></span>
                                             </div>
                                         </div>
                                     </td>

@@ -13,9 +13,9 @@ switch($function){
         getAllSupplier();
         closeConn();
     break;
-    case 'addFactureSell' :
+    case 'addOrderSell' :
         openConn();
-        addFactureSell();
+        addOrderSell();
         closeConn();
     break;
     case 'addOrderSells' :
@@ -33,9 +33,14 @@ switch($function){
         getSearchPerfume();
         closeConn();
     break;
-    case 'getAccessories':
+    case 'getTopAccessories':
         openConn();
-        getAccessories();
+        getTopAccessories();
+        closeConn();
+    break;
+    case 'getSearchAccessories':
+        openConn();
+        getSearchAccessories();
         closeConn();
     break;
 };

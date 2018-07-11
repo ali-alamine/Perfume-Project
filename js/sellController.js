@@ -6,10 +6,19 @@ app.filter('reverse', function() {
     return items.slice().reverse();
     };
 });
-app.controller('PerfumeALL', function($scope) {
+app.controller('PerfumeALL', function($scope, $http) {
     var id_total_drawer=localStorage.getItem('id_total_drawerKey');
+    $scope.newDefPerfumeName="";
+    $scope.nameE1="";
+    $scope.nameE2="";
+    $scope.botCapacity="كبس";
+    $scope.customPerfumeCost=0.0;
+    $scope.isKabessDisabled = false;
+    $scope.isKabessNoDisabled = true;
+    $scope.checkboxSavePerfume = false;
+    $scope.perfumeEssenceQuantity2K=0;
+    $scope.perfumeEssenceQuantity1K=0;
     $scope.facture=[];
-    var nbRow=0;
     $scope.getPerfume=[];
     $scope.rowsSells = [
         {type:'',name: '',quantity: '',selling:'',price: '',profit:''},
@@ -22,8 +31,8 @@ app.controller('PerfumeALL', function($scope) {
         $scope.getAllEssence();
         $scope.getAllBottle();
         $scope.getAlcohol();
-        $scope.getAccessories();
-        $scope.getAllClient();
+        $scope.getTopAccessories();
+        // $scope.getAllClient();
     });
     $scope.safeApply = function(fn) {
         var phase = this.$root.$$phase;
@@ -35,7 +44,6 @@ app.controller('PerfumeALL', function($scope) {
             this.$apply(fn);
         }
     };
-
     $scope.getAllEssence = function(){
         var url="../php/getAll.php";
         var data = {"function":"getAllEssence"};
@@ -130,19 +138,30 @@ app.controller('PerfumeALL', function($scope) {
         };
         $.ajax(options);
     };
-    $scope.getAllClient = function(){
-        var url="../php/getAll.php";
-        var data = {"function":"getAllClient"};
+    $scope.getSearchClient = function(){
         var options={
             type : "get",
-            url : url,
-            data: data,
+            url : "../php/client.php",
+            data: {"function":"getSearchClient",'clientName':$scope.clientData},
             dataType: 'json',
             async : false,
             cache : false,
             success : function(response,status) {
-                $scope.allClient=response;
+                $scope.getClient=response;
                 $scope.safeApply(function() {});
+                var idClient = $('#clientNameList option').filter(function() {
+                    return this.value == $scope.clientData;
+                }).data('id');
+                idClient = idClient ? idClient : 'noId';
+                if(idClient!='noId'){
+                    for(var i=0;i<$scope.getClient.length;i++){
+                        if($scope.getClient[i].id==idClient){
+                            $scope.clientPhone=$scope.getClient[i].phone;
+                        }
+                    }
+                } else{
+                    $scope.clientPhone='';
+                }
             },
             error:function(request,response,error){
                 swal({
@@ -186,22 +205,6 @@ app.controller('PerfumeALL', function($scope) {
         };
         $.ajax(options);
     };
-    $scope.$watchCollection('clientData', function(newValue, oldValue) {
-        if(newValue != undefined)
-        angular.forEach($scope.allClient, function(value, key) {
-            if(value.name == newValue){
-                $scope.clientPhone = value.phone;
-            }
-        });
-    });
-    $scope.$watchCollection('clientSellsData', function(newValue, oldValue) {
-        if(newValue != undefined)
-        angular.forEach($scope.allClient, function(value, key) {
-            if(value.name == newValue){
-                $scope.clientSellsPhone = value.phone;
-            }
-        });
-    });
     $scope.getSearchPerfume=function(){
         var options={
             type : "get",
@@ -251,16 +254,16 @@ app.controller('PerfumeALL', function($scope) {
         };
         $.ajax(options);
     }
-    $scope.getAccessories=function(){
+    $scope.getTopAccessories=function(){
         var options={
             type : "get",
             url : '../php/sell.php',
-            data: {"function":"getAccessories"},
+            data: {"function":"getTopAccessories"},
             dataType:'json',
             async : false,
             cache : false,
             success : function(response,status) {
-                $scope.getAccessories=response;
+                $scope.getTopAccessories=response;
                 $scope.safeApply(function() {});
             },
             error:function(request,response,error){
@@ -277,200 +280,59 @@ app.controller('PerfumeALL', function($scope) {
         };
         $.ajax(options);
     }
-    $scope.addFacturePerfume=function(){
-        var msg = '';
-        var price = $('#perfumePrice').val();
-        var quantity = $('#perfumeQuantity').val();
-        if(price == undefined){
-            msg+="السعر : معلومات ناقصة. \n";
-        }
-        if(quantity == undefined || quantity == 0){
-            msg+="العدد : معلومات ناقصة. \n";
-        }
-        if(msg != ''){
+    $scope.getSearchAccessories=function(){
+        var options={
+            type : "get",
+            url : '../php/sell.php',
+            data: {"function":"getSearchAccessories","searchAccessories":$scope.searchAccessories},
+            dataType:'json',
+            async : false,
+            cache : false,
+            success : function(response,status) {
+                $scope.getAccessories=response;
+                $scope.safeApply(function() {});
+                var idAccessories = $('#listAccessories option').filter(function() {
+                    return this.value == $scope.searchAccessories;
+                }).data('id');
+                idAccessories = idAccessories ? idAccessories : 'noId';
+                if(idAccessories!='noId'){
+                    for(var i=0;i<$scope.getAccessories.length;i++){
+                        if($scope.getAccessories[i].id==idAccessories){
+                            $scope.dAccessories.push({
+                                id:$scope.getAccessories[i].id,
+                                name:$scope.getAccessories[i].name,
+                                selling:$scope.getAccessories[i].selling,
+                                cost:$scope.getAccessories[i].cost
+                            }); 
+                        }
+                    }
+                } else{
+                    $scope.dAccessories=[];
+                }
+            },
+            error:function(request,response,error){
             swal({
-                title: "إنتبه!",
-                text: msg ,
-                type: "warning",
-                showCancelButton: false,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "نعم",
-                closeOnConfirm: true
-            });
-        } else{
-            $scope.facture.push({
-                type : 'perfume',
-                item_id : $scope.getPerfume[0]['id'],
-                name : $scope.getPerfume[0]['name'],
-                name_e1 : $scope.getPerfume[0]['name_e1'],
-                name_e2 : $scope.getPerfume[0]['name_e2'],
-                quan_e1 : $scope.getPerfume[0]['quan_e1'],
-                quan_e1 : $scope.getPerfume[0]['quan_e1'],
-                quan_a : $scope.getPerfume[0]['quan_a'],
-                quantity : quantity, //quantity Perfume OR accessories
-                price : price 
-            });
-            $scope.factureTotalPriceSell();
-            $('.sellPerfumeTable').animatescroll();
-            $("#searchPerfume").val('');
-            $("#searchPerfume").focus();
-            $('#perfumeQuantity').val('');
-            $scope.dPerfume=[];
-        }
+                  title: "Please contact your software developer",
+                  text: "ERROR: " + error,
+                  type: "warning",
+                  showCancelButton: false,
+                  confirmButtonClass: "btn-info",
+                  confirmButtonText: "Ok",
+                  closeOnConfirm: true
+                });
+            }
+        };
+        $.ajax(options);
     }
     $scope.factureTotalPriceSell = function(){
         var t=0;
-        $scope.facture.forEach(function(v) { t = t+ v.price; });
+        $scope.facture.forEach(function(v) { t = t+ parseFloat(v.price)*parseFloat(v.quantity); });
+        // alert(t)
         $scope.totalPriceSell = t ? t : '';
     }
     $scope.deleteRow = function(index){
         $scope.facture.splice(index,1);     
         $scope.factureTotalPriceSell();
-    }
-    $scope.addFactureSell = function(){
-        if($scope.facturePerfume!='' || $scope.factureItem!=''){
-            var name = [];
-            var price = [];
-            var quantity = [];
-            var bellingPrice = [];
-            var totalPrice = [];
-            var lengthFacturePerfume = $scope.facturePerfume.length;
-            var lengthFactureItem = $scope.factureItem.length;
-            var bottleId = [];
-            var essenceId1 =[];
-            var essenceId2 =[];
-            var essenceQuantity1 =[];
-            var essenceQuantity2 =[];
-            var alcoholQuantity =[];
-            var perfumeQuantity =[];
-            var lengthPerfume = $scope.perfume.length;
-            var itemId = [];
-            var quantityItem = [];
-            var lengthItem = $scope.item.length;
-            if(lengthFacturePerfume != 0){
-                for(var i = 0; i < lengthFacturePerfume; i++){
-                    name.push($scope.facturePerfume[i].name);
-                    price.push($scope.facturePerfume[i].price);
-                    quantity.push($scope.facturePerfume[i].quantity);
-                    bellingPrice.push($scope.facturePerfume[i].bellingPrice);
-                    totalPrice.push($scope.facturePerfume[i].totalPrice);                
-                }
-            }
-            if(lengthFactureItem != 0){
-                for(var i = 0; i < lengthFactureItem; i++){
-                    name.push($scope.factureItem[i].name);
-                    price.push($scope.factureItem[i].price);
-                    quantity.push($scope.factureItem[i].quantity);
-                    bellingPrice.push($scope.factureItem[i].bellingPrice);
-                    totalPrice.push($scope.factureItem[i].totalPrice);                
-                }
-            }
-            if(lengthPerfume != 0){
-                for(var i = 0; i < lengthPerfume; i++){
-                    bottleId.push($scope.perfume[i].bottleId);
-                    essenceId1.push($scope.perfume[i].essenceId1);
-                    essenceQuantity1.push($scope.perfume[i].essenceQuantity1);
-                    essenceId2.push($scope.perfume[i].essenceId2);
-                    essenceQuantity2.push($scope.perfume[i].essenceQuantity2);
-                    alcoholQuantity.push($scope.perfume[i].alcoholQuantity);
-                    perfumeQuantity.push($scope.perfume[i].perfumeQuantity);
-                }
-            } else{
-                bottleId.push('empty');
-                essenceId1.push('empty');
-                essenceQuantity1.push('empty');
-                essenceId2.push('empty');
-                essenceQuantity2.push('empty');
-                alcoholQuantity.push('empty');
-                perfumeQuantity.push('empty');
-            }
-            if(lengthItem != 0){
-                for(var i = 0; i < lengthItem; i++){
-                    itemId.push($scope.item[i].itemId);
-                    quantityItem.push($scope.item[i].quantityItem);
-                }
-            } else{
-                itemId.push('empty');
-                quantityItem.push('empty');
-            }
-            var clientName = $('#clientName').val();
-            if(clientName != ''){
-                var listClient='#clientNameList'+' option';
-                var idC = $(listClient).filter(function() {
-                    return this.value == clientName;
-                }).data('id');
-                var clientId = idC ?idC : 'noId';
-                var clientPhone = $('#clientPhone').val();
-                if(clientPhone == ''){
-                    clientPhone = '---';
-                }
-            } else{
-                var clientId = 'empty';
-                var clientPhone = '---';
-                clientName = 'empty';
-            }
-            var factureCode=document.getElementById('SLToBe').innerHTML;
-            var factureDate = $('#delDateSell').val();
-            var factureTotalPriceSell=$scope.factureTotalPriceSell();
-            var factureRestPrice=factureTotalPriceSell - $('#sellPayPrice').val();
-            var todayDate=getDate();
-            var url = '../php/sell.php';
-            var func = "addFactureSell";
-            var data = {
-                'function': func,
-                'type': 'sell',
-                'clientId' : clientId,
-                'clientName' : clientName,
-                'clientPhone' : clientPhone,
-                'factureCode' : factureCode,
-                'factureDate' : factureDate,
-                'sellTotalPrice': factureTotalPriceSell,
-                'sellRestPrice': factureRestPrice,
-                'name': name,
-                'price': price,
-                'quantity': quantity,
-                'bellingPrice': bellingPrice,
-                'totalPrice': totalPrice,
-                'bottleId': bottleId,
-                'essenceId1': essenceId1,
-                'essenceQuantity1': essenceQuantity1,
-                'essenceId2': essenceId2,
-                'essenceQuantity2': essenceQuantity2,
-                'alcoholQuantity': alcoholQuantity,
-                'perfumeQuantity': perfumeQuantity,
-                'itemId': itemId,
-                'quantityItem': quantityItem,
-                'lengthFacturePerfume' : lengthFacturePerfume,
-                'lengthFactureItem' : lengthFactureItem,
-                'lengthPerfume' : lengthPerfume,
-                'lengthItem' : lengthItem,
-                'todayDate' : todayDate,
-                'id_total_drawer':id_total_drawer
-            };
-            var options = {
-                type : "get",
-                url : url,
-                data: data,
-                dataType: "json",
-                async : false,
-                cache : false,
-                success : function(response,status) {
-                    location.reload();
-                },
-                error:function(request,response,error){
-                    swal({
-                        title: "إنتبه!",
-                        text: "مشكلة: "+error ,
-                        type: "warning",
-                        showCancelButton: false,
-                        confirmButtonClass: "btn-warning",
-                        confirmButtonText: "نعم",
-                        closeOnConfirm: true
-                    });
-                }
-            };
-            $.ajax(options);
-        }
     }
     $scope.cancelFactureSell = function(){
         $scope.facture = [];
@@ -478,7 +340,7 @@ app.controller('PerfumeALL', function($scope) {
         $scope.clientPhone='';  
         $scope.factureTotalPriceSell();
     }
-    $scope.addItemFacture = function(){
+    $scope.addRow = function(){
         $scope.rowsSells.push({type:'',name: '',quantity: '',selling:'',price: '',profit:''});
         $(".newRow").animatescroll();
     }
@@ -490,7 +352,7 @@ app.controller('PerfumeALL', function($scope) {
         $scope.rowsSells[index].profit='';
         if($scope.rowsSells[index].type=='alcohol'){
             $scope.rowsSells[index].name='كحول';
-            $scope.rowsSells[index].selling=parseInt($scope.alcohol[0].selling);
+            $scope.rowsSells[index].selling=parseFloat($scope.alcohol[0].selling);
         }
     }
     $scope.changeSelling = function(index){
@@ -507,7 +369,7 @@ app.controller('PerfumeALL', function($scope) {
             }).data('price');
             var sellingPrice = eSPrice ?eSPrice : 'noId';
             if(sellingPrice != 'noId' && sellingPrice>0){
-                $scope.rowsSells[index].selling=parseInt(sellingPrice);
+                $scope.rowsSells[index].selling=parseFloat(sellingPrice);
             } else{
                 return '';
             }
@@ -520,7 +382,7 @@ app.controller('PerfumeALL', function($scope) {
             }).data('price');
             var sellingPrice = bSPrice ?bSPrice : 'noId';
             if(sellingPrice != 'noId' && sellingPrice>0){
-                $scope.rowsSells[index].selling=parseInt(sellingPrice);
+                $scope.rowsSells[index].selling=parseFloat(sellingPrice);
             } else{
                 return '';
             }
@@ -543,7 +405,7 @@ app.controller('PerfumeALL', function($scope) {
             }).data('price');
             var sellingPrice = eSPrice ?eSPrice : 'noId';
             if(sellingPrice != 'noId'){
-                total=parseInt($scope.rowsSells[index].selling)*quantity;
+                total=parseFloat($scope.rowsSells[index].selling)*quantity;
                 if(total>0){   
                    $scope.rowsSells[index].price=total;
                    var cost = $(listType).filter(function() {
@@ -557,10 +419,10 @@ app.controller('PerfumeALL', function($scope) {
                 return '';
             }      
         } else if(type == "alcohol"){
-            total=parseInt($scope.rowsSells[index].selling)*quantity;
+            total=parseFloat($scope.rowsSells[index].selling)*quantity;
             if(total>0){
                 $scope.rowsSells[index].price=total;
-                $scope.rowsSells[index].profit=total-parseInt($scope.alcohol[0].cost);
+                $scope.rowsSells[index].profit=total-parseFloat($scope.alcohol[0].cost);
             }else{
                 return '';
             }
@@ -573,7 +435,7 @@ app.controller('PerfumeALL', function($scope) {
             }).data('price');
             var sellingPrice = bSPrice ?bSPrice : 'noId';
             if(sellingPrice != 'noId'){
-                total=parseInt($scope.rowsSells[index].selling)*quantity;
+                total=parseFloat($scope.rowsSells[index].selling)*quantity;
                 if(total>0){
                     $scope.rowsSells[index].price=total;
                     var cost = $(listType).filter(function() {
@@ -694,6 +556,355 @@ app.controller('PerfumeALL', function($scope) {
             }
         }
     }
+
+    $scope.essenceName1Changed = function(){
+        $scope.generatePefumeName();
+    }
+
+    $scope.essenceName2Changed = function(){
+        $scope.generatePefumeName();
+    }
+    $scope.generatePefumeName=function(){
+        $scope.newDefPerfumeName=$scope.nameE1+" "+$scope.nameE2+" | "+$scope.botCapacity;
+    }
+    $scope.bottleChanged=function(){
+
+        if($scope.selectedBottle==null)
+        {
+            $scope.botCapacity="كبس";
+            $scope.isKabessDisabled = false;
+            $scope.isKabessNoDisabled = true;
+            $scope.checkboxSavePerfume=false;
+        }
+        else
+        {
+            $scope.botCapacity=$scope.selectedBottle.capacity;
+            $scope.isKabessDisabled = true;
+            $scope.isKabessNoDisabled = false;
+            $scope.checkboxSavePerfume=false;
+        }
+        
+        if($scope.isKabessDisabled)
+        {
+            $scope.calculateAlcQuantity();
+        }
+
+        $scope.generatePefumeName();
+        $scope.calculateCost();
+    }
+    $scope.calculateAlcQuantity = function(){
+        $scope.perfumeAlcoholQuantity= $scope.botCapacity - $scope.perfumeEssenceQuantity1K - $scope.perfumeEssenceQuantity2K;
+    };
+    $scope.calculateCost = function(){
+        var bottleCost=0.0;
+        var essence1Cost=0.0;
+        var essence2Cost=0.0;
+        var alcCost=0.0;
+        if($scope.selectedBottle!=null && $scope.selectedBottle!=undefined)
+            bottleCost=parseFloat($scope.selectedBottle.cost);
+        if($scope.selectedEssence1!=null)
+            essence1Cost=parseFloat($scope.selectedEssence1.cost * $scope.perfumeEssenceQuantity1K/1000);
+        if($scope.selectedEssence2!=null)
+            essence2Cost=parseFloat($scope.selectedEssence2.cost * $scope.perfumeEssenceQuantity2K/1000);
+        alcCost = parseFloat(parseFloat($scope.alcohol[0].cost) * $scope.perfumeAlcoholQuantity/1000)
+        $scope.customPerfumeCost = parseFloat(bottleCost+essence1Cost+essence2Cost+alcCost);
+        // alert($scope.selectedBottle)
+    }
+    $scope.essence1Changed = function(){
+        if($scope.selectedEssence1==null){
+            $scope.nameE1="";
+            $scope.perfumeEssenceQuantity1K="";
+            $scope.perfumeAlcoholQuantity="";
+        }
+        else
+            $scope.nameE1=$scope.selectedEssence1.name;
+        $scope.generatePefumeName();
+        $scope.calculateCost();
+    }
+    $scope.essence2Changed = function(){
+        if($scope.selectedEssence2==null){
+            $scope.nameE2="";
+            $scope.perfumeEssenceQuantity2K="";
+            $scope.perfumeAlcoholQuantity="";
+        }
+        else
+            $scope.nameE2=$scope.selectedEssence2.name;
+        $scope.generatePefumeName();
+        $scope.calculateCost();
+    }
+    $scope.essence1QunatityChanged = function(){
+        $scope.calculateCost();
+        if($scope.isKabessDisabled)
+        {
+            $scope.calculateAlcQuantity();
+        }
+    }
+    $scope.essence2QunatityChanged = function(){
+        $scope.calculateCost();
+        if($scope.isKabessDisabled)
+        {
+            $scope.calculateAlcQuantity();
+        }
+    }
+    $scope.alcQuantityChanged = function(){
+        $scope.calculateCost();
+    }
+    $scope.addFacturePerfumeData=function(){
+        var msg = '';
+        var price = $('#perfumePrice').val();
+        var quantity = $('#perfumeQuantity').val();
+        if(price == undefined){
+            msg+="السعر : معلومات ناقصة. \n";
+        }
+        if(quantity == undefined || quantity == 0){
+            msg+="العدد : معلومات ناقصة. \n";
+        }
+        if(msg != ''){
+            swal({
+                title: "إنتبه!",
+                text: msg ,
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonClass: "btn-warning",
+                confirmButtonText: "نعم",
+                closeOnConfirm: true
+            });
+        } else{ 
+            $scope.facture.push({
+                type : 'perfume',
+                item_id : $scope.getPerfume[0]['id'],//def id
+                name : $scope.getPerfume[0]['name'],
+                id_b : $scope.getPerfume[0]['id_b'],
+                id_e1 : $scope.getPerfume[0]['id_e1'],
+                id_e2 : $scope.getPerfume[0]['id_e2'],
+                quan_e1 : $scope.getPerfume[0]['quan_e1'],
+                quan_e1 : $scope.getPerfume[0]['quan_e1'],
+                quan_a : $scope.getPerfume[0]['quan_a'],
+                cost:$scope.getPerfume[0]['cost'],
+                quantity : quantity, //quantity Perfume OR accessories
+                price : price,
+                profit:price -parseFloat($scope.getPerfume[0]['cost'])
+            });
+            $scope.factureTotalPriceSell();
+            $('.sellPerfumeTable').animatescroll();
+            $("#searchPerfume").val('');
+            $("#searchPerfume").focus();
+            $('#perfumeQuantity').val('');
+            $scope.dPerfume=[];
+        }
+    }
+    $scope.addFacturePerfumeKabbesData=function(){
+        var msg = '';
+        var price = $('#perfumeSellingPriceK').val();
+        var quantity = $('#perfumeQuantityFactureK').val();
+        if($scope.newDefPerfumeName=="" 
+            || $scope.perfumeEssenceQuantity1K == null 
+            || ($scope.selectedEssence1 != null && $scope.perfumeEssenceQuantity2K == null) 
+            || $scope.perfumeAlcoholQuantity == null)
+            msg+="عطر : معلومات ناقصة. \n";
+        if(price == '')
+            msg+="السعر : معلومات ناقصة. \n";
+        if(quantity == '')
+            msg+="العدد : معلومات ناقصة. \n";
+        if(msg != ''){
+            swal({
+                title: "إنتبه!",
+                text: msg ,
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonClass: "btn-warning",
+                confirmButtonText: "نعم",
+                closeOnConfirm: true
+            });
+        } else{
+            var item_id,id_b,id_e1,id_e2,quan_e2;
+            if($scope.checkboxSavePerfume==true) item_id='new'; else item_id=null;
+            if($scope.selectedBottle!=null) id_b=$scope.selectedBottle.id; else id_b=null;
+            if($scope.selectedEssence2!=null) id_e2=$scope.selectedEssence2.id; else id_e2=null;
+            if($scope.perfumeEssenceQuantity2K!=null) quan_e2=$scope.perfumeEssenceQuantity2K; else quan_e2=null;
+            $scope.facture.push({
+                type : 'perfume',
+                item_id :item_id,
+                name : $scope.newDefPerfumeName,
+                id_b : id_b,
+                id_e1 : $scope.selectedEssence1.id,
+                id_e2 : id_e2,
+                quan_e1 : $scope.perfumeEssenceQuantity1K,
+                quan_e2 : quan_e2,
+                quan_a : $scope.perfumeAlcoholQuantity,
+                cost:$scope.customPerfumeCost,
+                quantity : $scope.perfumeQuantityFactureK, //quantity Perfume OR accessories
+                price : $scope.customPerfumePrice,
+                profit:price - parseFloat($scope.customPerfumeCost)
+            });
+            console.log($scope.facture)
+            $scope.factureTotalPriceSell();
+            $('.sellPerfumeTable').animatescroll();
+            $("#searchPerfume").val('');
+            $("#searchPerfume").focus();
+            $scope.newDefPerfumeName='';
+            $scope.customPerfumeCost='';
+            $scope.selectedBottle=undefined;
+            $scope.selectedEssence1=undefined;
+            $scope.selectedEssence2=undefined;
+            $scope.perfumeEssenceQuantity1K='';
+            $scope.perfumeEssenceQuantity2K='';
+            $scope.perfumeAlcoholQuantity='';
+            $scope.customPerfumePrice='';
+            $scope.perfumeQuantityFactureK='';
+            $scope.checkboxSavePerfume=false;
+            $scope.isKabessNoDisabled = true;
+            $scope.isKabessDisabled = false;
+        }
+    }
+    $scope.addFactureAccessoriesData=function(index,id,name,cost){
+        var msg = '';
+        // alert(index)
+        if(index!='null'){ 
+            var p = "#accessoriesSelling"+ index;
+            var price = $(p).val();
+            var q =  "#accessoriesQuantity" + index;
+            var quantity=$(q).val();
+            // alert(index)
+        } else{
+            // alert(id)
+            var price = $("#accessoriesSelling").val();
+            var quantity=$('#accessoriesQuantity').val();
+        }
+        // alert(quantity)
+        if(price == '')
+            msg+="السعر : معلومات ناقصة. \n";
+        if(quantity == '')
+            msg+="العدد : معلومات ناقصة. \n";
+        if(msg != ''){
+            swal({
+                title: "إنتبه!",
+                text: msg ,
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonClass: "btn-warning",
+                confirmButtonText: "نعم",
+                closeOnConfirm: true
+            });
+        } else{
+            $scope.facture.push({
+                type : 'accessories',
+                item_id :id,
+                name : name,
+                id_b : null,
+                id_e1 : null,
+                id_e2 : null,
+                quan_e1 : null,
+                quan_e2 : null,
+                quan_a : null,
+                cost: cost,
+                quantity : quantity, //quantity Perfume OR accessories
+                price : price,
+                profit:price - cost
+            });
+            console.log($scope.facture)
+            $scope.factureTotalPriceSell();
+            $('#searchAccessories').animatescroll();
+            $("#searchAccessories").focus();
+            $("#searchAccessories").val('');
+            // $scope.accessoriesQuantity="";
+            $(price).val('');
+            $scope.dAccessories=[];
+        }
+    }
+    $scope.addFactureSell = function(){
+        if($scope.facture.length>0){
+            var msg="";
+            $scope.clientSell=[];
+            var clientName = $('#clientName').val();
+            if(clientName != '' && clientName != null){
+            // alert(clientName)
+                var listClient='#clientNameList option';
+                var idC = $(listClient).filter(function() {
+                    return this.value == clientName;
+                }).data('id');
+                var clientId = idC ?idC : 'noId';
+                // alert(clientId)
+                var phone=$('#clientPhone').val();
+                // alert(phone)
+                $scope.clientSell.push({
+                    id: clientId,
+                    name:clientName,
+                    phone:phone
+                });
+            } 
+            var orderDate = $('#delDateSell').val();
+            if(orderDate=='' || orderDate==undefined){
+                msg+="تاريخ : معلومات ناقصة. \n";
+            }
+            var orderPayPrice=$('#sellPayPrice').val();
+            if(orderPayPrice=='' || orderPayPrice==undefined ){
+                msg+="المبلغ المدفوع: معلومات ناقصة. \n";
+            }
+            var orderTotalPrice=$('#sellTotalPrice').val();
+            if(orderTotalPrice=='' || orderTotalPrice==undefined ){
+                msg+="مجموع الفاتورة: معلومات ناقصة. \n";
+            }
+            if(msg!=''){
+                swal({
+                    title: "إنتبه!",
+                    text: msg ,
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonClass: "btn-warning",
+                    confirmButtonText: "نعم",
+                    closeOnConfirm: true
+                });
+            } else {
+                var orderCode=document.getElementById('SLToBe').innerHTML;
+                var orderRestPrice = orderTotalPrice - orderPayPrice;
+                var factureDetails = JSON.stringify($scope.facture);
+                var clientDetails = JSON.stringify($scope.clientSell);
+                var options = {
+                    type : "get",
+                    url : '../php/sell.php',
+                    data: {
+                        'function':'addOrderSell',
+                        'factureData':factureDetails,
+                        'clientData':clientDetails,
+                        'orderCode':orderCode,
+                        'orderDate':orderDate,
+                        'orderTotalPrice':orderTotalPrice,
+                        'orderRestPrice':orderRestPrice
+                    },
+                    dataType: "json",
+                    async : false,
+                    cache : false,
+                    success : function(response,status) {
+                        // alert("goooooood")
+                        location.reload();
+                    },
+                    error:function(request,response,error){
+                        swal({
+                            title: "إنتبه!",
+                            text: "مشكلة: "+error ,
+                            type: "warning",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-warning",
+                            confirmButtonText: "نعم",
+                            closeOnConfirm: true
+                        });
+                    }
+                };
+                $.ajax(options);
+            }
+        }else{
+            swal({
+              title: "لا يوجد فاتورة للإدخال",
+              text: "",
+              type: "warning",
+              showCancelButton: false,
+              confirmButtonClass: "btn-warning",
+              confirmButtonText: "نعم",
+              closeOnConfirm: true,
+            });
+        } 
+    }
     $scope.addFactureSells = function(){
         var msg = '';
         $scope.orderEssence = [];
@@ -762,14 +973,14 @@ app.controller('PerfumeALL', function($scope) {
         if(lengthOrderNoEmpty!=0){
             var clientName = $('#clientSellsName').val();
             // alert(clientName)
-            if(clientName != ''){
-                var listClient='#clientSellsNameList option';
+            if(clientName != '' && clientName!=null){
+                var listClient='#clientNameList option';
                 var idC = $(listClient).filter(function() {
                     return this.value == clientName;
                 }).data('id');
                 var clientId = idC ?idC : 'noId';
                 // alert(clientId)
-                var phone=$('#clientSellsPhone').val();
+                var phone=$('#clientPhone').val();
                 // alert(phone)
                 $scope.client.push({
                     id: clientId,
@@ -852,166 +1063,6 @@ app.controller('PerfumeALL', function($scope) {
               closeOnConfirm: true,
             });
         }  
-    }
-
-    $scope.newDefPerfumeName="";
-    $scope.nameE1="";
-    $scope.nameE2="";
-    $scope.botCapacity="كبس";
-    $scope.customPerfumeCost=0.0;
-    $scope.isKabessDisabled = false;
-    $scope.perfumeEssenceQuantity2K=0;
-    $scope.perfumeEssenceQuantity1K=0;
-
-    $scope.essenceName1Changed = function(){
-        $scope.generatePefumeName();
-    }
-
-    $scope.essenceName2Changed = function(){
-        $scope.generatePefumeName();
-    }
-    $scope.generatePefumeName=function(){
-        $scope.newDefPerfumeName=$scope.nameE1+" "+$scope.nameE2+" | "+$scope.botCapacity;
-    }
-    $scope.bottleChanged=function(){
-
-        if($scope.selectedBottle==null)
-        {
-            $scope.botCapacity="كبس";
-            $scope.isKabessDisabled = false;
-        }
-        else
-        {
-            $scope.botCapacity=$scope.selectedBottle.capacity;
-            $scope.isKabessDisabled = true;
-        }
-        
-        if($scope.isKabessDisabled)
-        {
-            $scope.calculateAlcQuantity();
-        }
-
-        $scope.generatePefumeName();
-        $scope.calculateCost();
-    }
-    $scope.calculateAlcQuantity = function(){
-        $scope.perfumeAlcoholQuantity= $scope.botCapacity - $scope.perfumeEssenceQuantity1K - $scope.perfumeEssenceQuantity2K;
-
-    };
-    $scope.calculateCost = function(){
-        var bottleCost=0.0;
-        var essence1Cost=0.0;
-        var essence2Cost=0.0;
-        var alcCost=0.0;
-
-
-
-        if($scope.selectedBottle!=null)
-            bottleCost=parseFloat($scope.selectedBottle.cost);
-
-        if($scope.selectedEssence1!=null)
-            essence1Cost=parseFloat($scope.selectedEssence1.cost * $scope.perfumeEssenceQuantity1K/1000);
-
-        if($scope.selectedEssence2!=null)
-            essence2Cost=parseFloat($scope.selectedEssence2.cost * $scope.perfumeEssenceQuantity2K/1000);
-
-
-        alcCost = parseFloat(parseFloat($scope.alcohol[0].cost) * $scope.perfumeAlcoholQuantity/1000)
-
-
-
-        
-        $scope.customPerfumeCost = parseFloat(bottleCost+essence1Cost+essence2Cost+alcCost);
-    }
-    $scope.essence1Changed = function(){
-
-        if($scope.selectedEssence1==null){
-            $scope.nameE1="";
-            $scope.perfumeEssenceQuantity1K="";
-            $scope.perfumeAlcoholQuantity="";
-        }
-        else
-            $scope.nameE1=$scope.selectedEssence1.name;
-
-        $scope.generatePefumeName();
-        $scope.calculateCost();
-    }
-    $scope.essence2Changed = function(){
-
-        if($scope.selectedEssence2==null){
-            $scope.nameE2="";
-            $scope.perfumeEssenceQuantity2K="";
-            $scope.perfumeAlcoholQuantity="";
-        }
-        else
-            $scope.nameE2=$scope.selectedEssence2.name;
-
-        $scope.generatePefumeName();
-        $scope.calculateCost();
-    }
-    $scope.essence1QunatityChanged = function(){
-        $scope.calculateCost();
-        if($scope.isKabessDisabled)
-        {
-            $scope.calculateAlcQuantity();
-        }
-    }
-    $scope.essence2QunatityChanged = function(){
-        $scope.calculateCost();
-        if($scope.isKabessDisabled)
-        {
-            $scope.calculateAlcQuantity();
-        }
-    }
-    $scope.alcQuantityChanged = function(){
-        $scope.calculateCost();
-    }
-     $scope.addFacturePerfumeKabbesData=function(){
-        var msg = '';
-        var price = $('#perfumeSellingPriceK').val();
-        var quantity = $('#perfumeQuantityFactureK').val();
-        if(price == undefined || price==0 ){
-            msg+="السعر : معلومات ناقصة. \n";
-        }
-        if(quantity == undefined || quantity == 0){
-            msg+="العدد : معلومات ناقصة. \n";
-        }
-        if($scope.newDefPerfumeName=="")
-            msg+=" essence"
-        if(msg != ''){
-            swal({
-                title: "إنتبه!",
-                text: msg ,
-                type: "warning",
-                showCancelButton: false,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "نعم",
-                closeOnConfirm: true
-            });
-        } else{
-            $scope.facture.push({
-                type : 'kabes',
-                item_id : null,
-                name : $scope.newDefPerfumeName,
-                name_e1 : null,
-                name_e2 : null,
-                quan_e1 : null,
-                quan_e2 : null,
-                quan_a : null,
-                quantity : quantity, //quantity Perfume OR accessories
-                price : $scope.customPerfumePrice
-            });
-
-            $scope.factureTotalPriceSell();
-            $('.sellPerfumeTable').animatescroll();
-            $("#searchPerfume").val('');
-            $("#searchPerfume").focus();
-            $('#perfumeQuantity').val('');
-
-            $scope.newDefPerfumeName="";
-            $scope.selectedEssence1="";
-            $scope.customPerfumePrice="";
-        }
     }
 
 });

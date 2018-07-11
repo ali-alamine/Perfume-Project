@@ -38,5 +38,20 @@ switch($function){
         sellsInvoiceDetails();
         closeConn();
     break;
+     case 'sellInvoicesDataTable' :
+        openConn();
+        sellInvoicesDataTable();
+        closeConn();
+    break;
+    case 'sellInvoiceDetails' :
+        openConn();
+        sellInvoiceDetails();
+        closeConn();
+    break;
+    case 'removeFacture' :
+        openConn();
+        removeFacture();
+        closeConn();
+    break;
 };
 ?>

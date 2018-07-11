@@ -516,7 +516,7 @@ app.controller('SupplyALL', function($scope, $http) {
                 // alert()
                 var exD = "#expirationDate"+i;
                 var dateExp = $(exD).val(); 
-                alert(dateExp)
+                // alert(dateExp)
                 if($scope.rowsAccessories[i].quantity !="" && $scope.rowsAccessories[i].quantity !=undefined 
                     && $scope.rowsAccessories[i].cost !="" && $scope.rowsAccessories[i].cost !=undefined
                     && $scope.rowsAccessories[i].selling !="" && $scope.rowsAccessories[i].selling !=undefined

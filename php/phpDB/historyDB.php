@@ -204,6 +204,84 @@ function sellsInvoiceDetails(){ //checked
 	$jsonData = '[' . $jsonData . ']';
 	echo $jsonData;
 }
+function sellInvoicesDataTable(){ //checked
+	$requestData= $_REQUEST;
+	$rowsReq = (isset($_GET['length'])) ? intval($_GET['length']) : 10;
+	$start = (isset($_GET['start'])) ? intval($_GET['start']) : 0;
+	$rowsCount=mysqli_fetch_assoc(mysqli_query(openConn(),"select COUNT(ODID) as exp from order_details where ord_det_code like 'SL%'"))['exp'];
+	$orderString="";
+	if($rowsReq==-1)
+	{
+		$rowsReq=$rowsCount;
+	}
+	if(count($_GET['order']))
+	{
+		$orderBy = $_GET['columns'][$_GET['order'][0]['column']]['data'];
+ 		$orderDir = $_GET['order'][0]['dir'];
+ 		$orderString=" ORDER BY ".$orderBy." ".$orderDir;
+	}
+	if(isset($_GET["search"]["value"]) && !empty($_GET["search"]["value"]))
+	{
+ 		$search = $_GET["search"]["value"];
+ 		$getAllSellsInvoicesQuery=" SELECT order_details.ODID ,order_details.ord_det_code ,order_details.ord_det_date ,client.client_fullName ,order_details.ord_det_total_price,order_details.ord_det_rem_amount FROM order_details  LEFT JOIN client ON order_details.ord_det_CID = client.CID WHERE ord_det_code LIKE 'SL%' AND order_details.ord_det_code like '%".$search."%' OR order_details.ord_det_date like '%".$search."%' OR client.client_fullName like '%".$search."%'".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+	}
+	else
+	{
+		$getAllSellsInvoicesQuery=" SELECT order_details.ODID ,order_details.ord_det_code ,order_details.ord_det_date ,client.client_fullName ,order_details.ord_det_total_price,order_details.ord_det_rem_amount FROM order_details  LEFT JOIN client ON order_details.ord_det_CID = client.CID WHERE ord_det_code LIKE 'SL%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+	}
+	$getAllSellsInvoicesQuerySQL = mysqli_query(openConn(),$getAllSellsInvoicesQuery); 
+	$rowsCountFilter = mysqli_num_rows($getAllSellsInvoicesQuerySQL);
+	$jsonData="";
+	if($getAllSellsInvoicesQuerySQL){
+		while ($row=mysqli_fetch_assoc($getAllSellsInvoicesQuerySQL)){
+			if($row != NULL){
+				if($jsonData != ""){
+					$jsonData = $jsonData . ",";
+				}
+				$jsonData = $jsonData . '{"ODID":"' . $row['ODID'] . '",';
+				$jsonData = $jsonData . '"ord_det_code":"' . $row['ord_det_code'] . '",';
+				$jsonData = $jsonData . '"ord_det_date":"' . $row['ord_det_date'] . '",';
+				$jsonData = $jsonData . '"client_fullName":"' . $row['client_fullName'] . '",';
+				$jsonData = $jsonData . '"ord_det_total_price":"' . $row['ord_det_total_price'] . '",';
+				$jsonData = $jsonData . '"ord_det_rem_amount":"' . $row['ord_det_rem_amount'] . '"}';
+			}
+		}
+	}
+	$jsonData = '[' . $jsonData . ']';
+	$jsonData2='{"draw":'.intval($requestData['draw']).',"recordsTotal":'.$rowsCount.', "recordsFiltered":'.$rowsCount.', "data":'.$jsonData.'}';
+	echo ($jsonData2);
+}
+function sellInvoiceDetails(){ //checked
+	$id = $_GET['id'];
+	$getSellsInvoiceDetailsQuery=" SELECT  order_s.ord_k_name, order_s.ord_quantity ,order_s.ord_price , (order_s.ord_quantity * order_s.ord_price) as QuanMbyPrice  FROM order_s where order_s.ord_ODID= ".$id;
+
+	$getSellsInvoiceDetailsQuerySQL=mysqli_query(openConn(),$getSellsInvoiceDetailsQuery);
+	$jsonData = "";
+	if($getSellsInvoiceDetailsQuerySQL){
+		while($row = mysqli_fetch_assoc($getSellsInvoiceDetailsQuerySQL)){	
+			if($row != NULL){
+				if($jsonData != ""){
+					$jsonData = $jsonData . ",";
+				}
+				$jsonData = $jsonData . '{"name":"' . $row['ord_k_name'] . '",';
+				$jsonData = $jsonData . '"quantity":"' . $row['ord_quantity'] . '",';
+				$jsonData = $jsonData . '"price":"' . $row['ord_price'] . '",';
+				$jsonData = $jsonData . '"totalPrice":"' . $row['QuanMbyPrice'] . '"}';			
+			}
+		}
+	}
+	$jsonData = '[' . $jsonData . ']';
+	echo $jsonData;
+}
+function removeFacture(){
+	$id=$_GET['id'];
+	$deleteOrderDetailsQuery="DELETE FROM order_details WHERE ODID=".$id;
+	mysqli_query(openConn(),$deleteOrderDetailsQuery);
+	$deleteOrderQuery="DELETE FROM order_s WHERE ord_ODID=".$id;
+	mysqli_query(openConn(),$deleteOrderQuery);
+	$msg='إلغاء';
+	echo '{"msg":"'.$msg.'"}';
+}
 ?>
 
 

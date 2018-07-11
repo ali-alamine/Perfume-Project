@@ -60,132 +60,120 @@ function displayFactureCodeToBe(){
 	$jsonData = '{"FcodeToBe":"' . $facture_code . '"}';	
 	 echo $jsonData;
 }
-function addFactureSell(){
-	$type = $_GET['type'];
-	$clientId = $_GET['clientId'];
-	$clientName = $_GET['clientName'];
-	$clientPhone = $_GET['clientPhone'];
-	$factureCode = $_GET['factureCode'];
-	$factureDate = $_GET['factureDate'];
-	$sellTotalPrice = $_GET['sellTotalPrice'];
-	$sellRestPrice = $_GET['sellRestPrice'];
-	$name = $_GET['name'];
-	$price = $_GET['price'];
-	$quantity = $_GET['quantity'];
-	$bellingPrice = $_GET['bellingPrice'];
-	$totalPrice = $_GET['totalPrice'];
-	$bottleId = $_GET['bottleId'];
-	$essenceId1 = $_GET['essenceId1'];
-	$essenceId2 = $_GET['essenceId2'];
-	$essenceQuantity1 = $_GET['essenceQuantity1'];
-	$essenceQuantity2 = $_GET['essenceQuantity2'];
-	$alcoholQuantity = $_GET['alcoholQuantity'];
-	$perfumeQuantity = $_GET['perfumeQuantity'];
-	$itemId = $_GET['itemId'];
-	$quantityItem = $_GET['quantityItem'];
-	$lengthFacturePerfume = $_GET['lengthFacturePerfume'];
-	$lengthFactureItem = $_GET['lengthFactureItem'];
-	$lengthPerfume = $_GET['lengthPerfume'];
-	$lengthItem = $_GET['lengthItem'];
-	$todayDate = $_GET['todayDate'];
-	$id_total_drawer = $_GET['id_total_drawer'];
-	$totalAlcohol = 0;
-	$totalBellingPrice=0.0;
-	if($clientId == 'noId'){
-		$addClientQuery="INSERT INTO client (full_name,phone,debit)VALUES('".$clientName."','".$clientPhone."','".$sellRestPrice."')";
-		$addClientQuerySQL = mysqli_query(openConn(),$addClientQuery);
-		$getClientQuery="SELECT id FROM client ORDER BY id DESC LIMIT 1";
-		$getClientQuerySQL=mysqli_query(openConn(),$getClientQuery);
-    	if($getClientQuerySQL){
-			while($row = mysqli_fetch_assoc($getClientQuerySQL)){	
+function addOrderSell(){
+	$jsonFactureData = $_GET['factureData'];
+	$factureDetails = json_decode($jsonFactureData, true);
+	$jsonClientData = $_GET['clientData'];
+	$clientDetails = json_decode($jsonClientData, true); 
+	$orderCode = $_GET['orderCode'];
+	$orderDate = $_GET['orderDate'];
+	$orderTotalPrice = $_GET['orderTotalPrice'];
+	$orderRestPrice = $_GET['orderRestPrice'];
+	$sizeFacture=sizeof($factureDetails);
+	$sizeClient=sizeof($clientDetails);
+	$totalProfit=0.0;
+    // file_put_contents("www2.txt",$sizeClient);
+	if($sizeClient>0){
+		$clientId=$clientDetails[0]['id'];
+		if($clientDetails[0]['id']!='noId' && $clientDetails[0]['name']!="" && $orderRestPrice!=0){
+			$updateClientInfoQuery="UPDATE client SET client_debit = client_debit + '".$orderRestPrice."' WHERE CID='".$clientDetails[0]['id']."' ";
+			$updateClientInfoQuerySQL=mysqli_query(openConn(),$updateClientInfoQuery);
+		} else if($clientDetails[0]['id']=='noId' && $clientDetails[0]['name']!=""){
+			$addClientQuery="INSERT INTO client (client_fullName,client_phone,client_debit)VALUES('".$clientDetails[0]['name']."','".$clientDetails[0]['phone']."','".$orderRestPrice."')";
+			$addClientQuerySQL = mysqli_query(openConn(),$addClientQuery);
+			$getClientQuery="SELECT CID FROM client ORDER BY CID DESC LIMIT 1";
+    	// file_put_contents("www3.txt",$addClientQuery);
+			$getClientQuerySQL=mysqli_query(openConn(),$getClientQuery);
+	    	if($getClientQuerySQL){
+				while($row = mysqli_fetch_assoc($getClientQuerySQL)){	
+					if($row != NULL){
+						$clientId=$row['CID'];
+					}
+				}
+			}
+		}
+		$addOrderDetailQuery="INSERT INTO order_details(ord_det_CID,ord_det_code,ord_det_total_price,ord_det_rem_amount,ord_det_date,ord_det_profit) VALUES('".$clientId."','".$orderCode."','".$orderTotalPrice."','".$orderRestPrice."','".$orderDate."','0')";
+		$addOrderDetailQuerySQL = mysqli_query(openConn(),$addOrderDetailQuery);
+		$getIdOrderDetailsQuery="SELECT ODID FROM order_details ORDER BY ODID DESC LIMIT 1";
+		$getIdOrderDetailsQuerySQL=mysqli_query(openConn(),$getIdOrderDetailsQuery);
+		if($getIdOrderDetailsQuerySQL){
+			while($row = mysqli_fetch_assoc($getIdOrderDetailsQuerySQL)){	
 				if($row != NULL){
-					$clientId=$row['id'];
+					$ODID=$row['ODID'];
 				}
 			}
-		}
-	} elseif(($clientId != 'noId' || $clientId != 'empty') && $sellRestPrice != 0){
-		$updateClientInfoQuery="UPDATE client SET debit = debit + '".$sellRestPrice."' WHERE id='".$clientId."' ";
-		$updateClientInfoQuerySQL=mysqli_query(openConn(),$updateClientInfoQuery);
-	}
-	if($clientId != 'empty'){
-		$addFactureSellQuery="INSERT INTO sell (type,total,rest,dateS,code,id_client,name_client) VALUES('".$type."','".$sellTotalPrice."','".$sellRestPrice."','".$factureDate."','".$factureCode."','".$clientId."','".$clientName."')";
-		$addFactureSellQuerySQL = mysqli_query(openConn(),$addFactureSellQuery);
-		$getFactureSellQuery="SELECT id FROM sell ORDER BY id DESC LIMIT 1";
-		$getFactureSellQuerySQL=mysqli_query(openConn(),$getFactureSellQuery);
-		if($getFactureSellQuerySQL){
-			while($row = mysqli_fetch_assoc($getFactureSellQuerySQL)){	
+		}	
+	} else if($sizeClient==0){
+		$addOrderDetailQuery="INSERT INTO order_details(ord_det_CID,ord_det_code,ord_det_total_price,ord_det_rem_amount,ord_det_date,ord_det_profit) VALUES(NULL,'".$orderCode."','".$orderTotalPrice."','".$orderRestPrice."','".$orderDate."','0')";
+		$addOrderDetailQuerySQL = mysqli_query(openConn(),$addOrderDetailQuery);
+		$getIdOrderDetailsQuery="SELECT ODID FROM order_details ORDER BY ODID DESC LIMIT 1";
+		$getIdOrderDetailsQuerySQL=mysqli_query(openConn(),$getIdOrderDetailsQuery);
+		if($getIdOrderDetailsQuerySQL){
+			while($row = mysqli_fetch_assoc($getIdOrderDetailsQuerySQL)){	
 				if($row != NULL){
-					$id_sell=$row['id'];
+					$ODID=$row['ODID'];
 				}
 			}
-		}
-	} elseif($clientId == 'empty'){
-		$addFactureSellQuery="INSERT INTO sell (type,total,rest,dateS,code)VALUES('".$type."','".$sellTotalPrice."','".$sellRestPrice."','".$factureDate."','".$factureCode."')";
-		$addFactureSellQuerySQL = mysqli_query(openConn(),$addFactureSellQuery);
-		$getFactureSellQuery="SELECT id FROM sell ORDER BY id DESC LIMIT 1";
-		$getFactureSellQuerySQL=mysqli_query(openConn(),$getFactureSellQuery);
-		if($getFactureSellQuerySQL){
-			while($row = mysqli_fetch_assoc($getFactureSellQuerySQL)){	
-				if($row != NULL){
-					$id_sell=$row['id'];
-				}
-			}
-		}
+		}	
 	}
-	$rowsFacture = $lengthFacturePerfume + $lengthFactureItem;
-	if($rowsFacture != 0){
-		 // file_put_contents("WWW.txt", $rowsFacture);
-		for($i=0;$i<$rowsFacture;$i++){
-			//if($name[$i] !='empty' && $quantity[$i]!='empty' && $price[$i]!='empty' && $totalPrice[$i]!='empty' && $bellingPrice[$i]!='empty'){
-				$addFactureSellDetailQuery="INSERT INTO sell_detail(id_sell,name,quantity,price,totalPrice,bellingPrice)VALUES('".$id_sell."','".$name[$i]."','".$quantity[$i]."','".$price[$i]."','".$totalPrice[$i]."','".$bellingPrice[$i]."')";
-				$addFactureSellDetailQuerySQL=mysqli_query(openConn(),$addFactureSellDetailQuery);
-		 // file_put_contents("xxxx.txt", $addFactureSellDetailQuery);
-				$totalBellingPrice=$totalBellingPrice+$bellingPrice[$i];
-			//}
-		}
-		if($lengthFacturePerfume != 0){
-			for($i=0;$i<$lengthFacturePerfume;$i++){
-				if($bottleId[$i] != 'empty' || $bottleId[$i] != 'noId'){
-					$updateBottleQuery="UPDATE bottle SET quantity = quantity - '".$perfumeQuantity[$i]."' Where id='".$bottleId[$i]."'";
-					$updateBottleQuerySQL=mysqli_query(openConn(),$updateBottleQuery);
-				}
-				$updateEssenceQuery="UPDATE essence SET quantity = quantity - '".($essenceQuantity1[$i]/1000)*$perfumeQuantity[$i]."' Where id='".$essenceId1[$i]."'";
-				$updateEssenceQuerySQL=mysqli_query(openConn(),$updateEssenceQuery);
-				if($essenceId2[$i] != 'empty' && $essenceQuantity2[$i] != 'empty'){
-					$updateEssenceQuery="UPDATE essence SET quantity = quantity - '".($essenceQuantity2[$i]/1000)*$perfumeQuantity[$i]."' Where id='".$essenceId2[$i]."'";
-					$updateEssenceQuerySQL=mysqli_query(openConn(),$updateEssenceQuery);
-				}
-				$totalAlcohol = $totalAlcohol + ($alcoholQuantity[$i]/1000)*$perfumeQuantity[$i];
+	
+	for($i=0;$i<$sizeFacture;$i++){
+		if($factureDetails[$i]['type']=='perfume'){
+			$updateItemPerfume1Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_e1']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_e1']."'";
+    	file_put_contents("www1.txt",$updateItemPerfume1Query);
+			$updateItemPerfume1QuerySQL=mysqli_query(openConn(),$updateItemPerfume1Query);
+			$updateItemPerfume2Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_a']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='1'";
+    	file_put_contents("www2.txt",$updateItemPerfume2Query);
+			$updateItemPerfume2QuerySQL=mysqli_query(openConn(),$updateItemPerfume2Query);
+			if($factureDetails[$i]['id_e2']!=null){
+				$updateItemPerfume3Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_e2']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_e2']."'";
+    	file_put_contents("www3.txt",$updateItemPerfume3Query);
+				$updateItemPerfume3QuerySQL=mysqli_query(openConn(),$updateItemPerfume3Query);
 			}
-			if($totalAlcohol != 0){
-				$alcohol='alcohol';
-				$updateEssenceQuery="UPDATE essence SET quantity = quantity - '".$totalAlcohol."' Where name= '".$alcohol."'";
-				$updateEssenceQuerySQL=mysqli_query(openConn(),$updateEssenceQuery);
+			if($factureDetails[$i]['id_b']!=null){
+				$updateItemPerfume4Query="UPDATE component SET com_quan=com_quan-'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_b']."'";
+    	file_put_contents("www4.txt",$updateItemPerfume4Query);
+				$updateItemPerfume4QuerySQL=mysqli_query(openConn(),$updateItemPerfume4Query);
 			}
-		}
-		if($lengthFactureItem != 0){
-			for($i=0;$i<$lengthFactureItem;$i++){
-				$updateItemQuery="UPDATE item SET quantity = quantity - '".$quantityItem[$i]."' Where id='".$itemId[$i]."'";
-				$updateItemQuerySQL=mysqli_query(openConn(),$updateItemQuery);
-			}
-		}
-	}
-	$updateFactureSellQuery="UPDATE sell SET bellingPrice = '".$totalBellingPrice."' WHERE id='".$id_sell."' ";
-	$updateFactureSellQuerySQL=mysqli_query(openConn(),$updateFactureSellQuery);
-	$sellTotalPrice=$sellTotalPrice-$sellRestPrice;
-	$addDrawerQuery="INSERT INTO drawer (dateD,amount,type,profit) VALUES('".$factureDate."','".$sellTotalPrice."','sell','".$totalBellingPrice."')";
-	$addDrawerQuerySQL = mysqli_query(openConn(),$addDrawerQuery);	
-	// if($todayDate == $factureDate){
+			if($factureDetails[$i]['item_id']=='new'){
+				//insert new def perf
+				$addDefPerfumeSQL = "INSERT INTO item (item_name,item_cost,item_selling) VALUES ( '".$factureDetails[$i]['name']."',".doubleval($factureDetails[$i]['cost'])." , ".doubleval($factureDetails[$i]['price']).")";
+				$addDefPerfumeSQL = mysqli_query(openConn(),$addDefPerfumeSQL);
+				$getIdItemQuery="SELECT IID FROM item ORDER BY IID DESC LIMIT 1";
+				$getIdItemQuerySQL=mysqli_query(openConn(),$getIdItemQuery);
+				if($getIdItemQuerySQL){
+					while($row = mysqli_fetch_assoc($getIdItemQuerySQL)){	
+						if($row != NULL){
+							$id=$row['IID'];
+						}
+					}
+				}	
+				if($factureDetails[$i]['id_e2']!=null){ // insert two essence
+        			$addDefPerfumeDetailsSQL = "INSERT INTO definition_perfume (item_IID,item_b_IID,item_e1_IID,item_e2_IID,item_quan_e1,item_quan_e2,item_quan_a) VALUES(".$id.",".$factureDetails[$i]['id_b']." ,".$factureDetails[$i]['id_e1'].", ".$factureDetails[$i]['id_e2']." , ".$factureDetails[$i]['quan_e1'].", ".$factureDetails[$i]['quan_e2']." ,".$factureDetails[$i]['quan_a'].")";
 
-	// } else 
-	if($todayDate != $factureDate){
-	// file_put_contents("wewewewew.txt", $factureDate );
-		$updateTotalDrawerQuery="UPDATE drawer SET amount = amount + '".$sellTotalPrice."' WHERE dateD='".$factureDate."' AND type='total'";
-		$updateTotalDrawerQuerySQL = mysqli_query(openConn(),$updateTotalDrawerQuery);	
-	} else if($todayDate == $factureDate){
-		$updateTotalDrawerQuery="UPDATE drawer SET amount = amount + '".$sellTotalPrice."' WHERE id='".$id_total_drawer."'";
-		$updateTotalDrawerQuerySQL = mysqli_query(openConn(),$updateTotalDrawerQuery);	
+				} else { // insert one essence 
+					$addDefPerfumeDetailsSQL = "INSERT INTO definition_perfume (item_IID,item_b_IID,item_e1_IID,item_quan_e1,item_quan_a) VALUES (".$id.",".$factureDetails[$i]['id_b']." ,".$factureDetails[$i]['id_e1'].", ".$factureDetails[$i]['quan_e1'].",".$factureDetails[$i]['quan_a'].")";
+				}
+    			$addDefPerfumeDetailsSQL=mysqli_query(openConn(), $addDefPerfumeDetailsSQL);
+			}
+		} else if($factureDetails[$i]['type']=='accessories'){
+			$updateAccessoriesQuery="UPDATE component SET com_quan=com_quan-'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['item_id']."'";
+			$updateAccessoriesQuerySQL=mysqli_query(openConn(),$updateAccessoriesQuery);
+		}
+		//add facture order 
+		if($factureDetails[$i]['item_id']==null || $factureDetails[$i]['item_id']=='new'){
+			$addOrderQuery="INSERT INTO order_s(ord_ODID,ord_k_name,ord_quantity,ord_price,ord_profit) VALUES('".$ODID."','".$factureDetails[$i]['name']. "','".$factureDetails[$i]['quantity']. "','".$factureDetails[$i]['price']. "','".$factureDetails[$i]['profit']. "')";
+			$addOrderQuerySQL=mysqli_query(openConn(),$addOrderQuery);
+		} else {
+			$addOrderQuery="INSERT INTO order_s(ord_ODID,ord_IID,ord_k_name,ord_quantity,ord_price,ord_profit) VALUES('".$ODID."','".$factureDetails[$i]['item_id']. "','".$factureDetails[$i]['name']. "','".$factureDetails[$i]['quantity']. "','".$factureDetails[$i]['price']. "','".$factureDetails[$i]['profit']. "')";
+    	// file_put_contents("www5.txt",$addOrderQuery);
+			$addOrderQuerySQL=mysqli_query(openConn(),$addOrderQuery);
+		}
+		$totalProfit=$totalProfit+$factureDetails[$i]['profit'];
 	}
+	//update profit order_detail
+	$updateOrderDetailsProfitQuery="UPDATE order_details  SET ord_det_profit='".$totalProfit."' Where ODID='".$ODID."'";
+	$updateOrderDetailsProfitQuerySQL=mysqli_query(openConn(),$updateOrderDetailsProfitQuery);
 	echo "{}";
 }
 function addOrderSells(){
@@ -253,7 +241,7 @@ function addOrderSells(){
 	for($i=0;$i<$sizeOEssence;$i++){
 		//add facture order Essence
 		$addOrderEssenceQuery="INSERT INTO order_s(ord_ODID,ord_IID,ord_quantity,ord_price,ord_profit) VALUES('".$ODID."','".$orderEssenceDetails[$i]['id']. "','".$orderEssenceDetails[$i]['quantity']. "','".$orderEssenceDetails[$i]['price']. "','".$orderEssenceDetails[$i]['profit']. "')";
-    	file_put_contents("www2.txt",$addOrderEssenceQuery);
+    	// file_put_contents("www2.txt",$addOrderEssenceQuery);
 		$addOrderEssenceQuerySQL=mysqli_query(openConn(),$addOrderEssenceQuery);
 		$totalProfit=$totalProfit+$orderEssenceDetails[$i]['profit'];
 		//update items Essence
@@ -292,7 +280,7 @@ function addOrderSells(){
 }
 function getSearchPerfume(){
 	$searchPerfume=$_GET['searchPerfume'];
-	$getPerfumeDefInfoSQL="SELECT d.* from (SELECT def.item_IID ,def.item_quan_a, itemEss1.item_name as item_name_ess1,itemEss2.item_name as item_name_ess2,def.item_quan_e1,def.item_quan_e2, CONCAT(botNAME.item_name,' | ',botC.com_capacity) as bottleInfo,itemDet.item_name,itemDet.item_cost,itemDet.item_selling FROM definition_perfume AS def INNER JOIN item as itemDet on def.item_IID = itemDet.IID inner join item as itemEss1 on def.item_e1_IID =itemEss1.IID left  join item as itemEss2 on def.item_e2_IID =itemEss2.IID inner join item as botNAME on def.item_b_IID = botNAME.IID inner join component as botC on def.item_b_IID = botC.IID where itemDet.item_name LIKE '%".$searchPerfume."%' order by itemDet.item_name ) as d  LIMIT 20 ";
+	$getPerfumeDefInfoSQL="SELECT d.* from (SELECT def.item_IID ,def.item_quan_a,def.item_e1_IID as item_id_ess1, itemEss1.item_name as item_name_ess1,def.item_e2_IID as item_id_ess2,itemEss2.item_name as item_name_ess2,def.item_quan_e1,def.item_quan_e2,def.item_b_IID as id_b, CONCAT(botNAME.item_name,' | ',botC.com_capacity) as bottleInfo,itemDet.item_name,itemDet.item_cost,itemDet.item_selling FROM definition_perfume AS def INNER JOIN item as itemDet on def.item_IID = itemDet.IID inner join item as itemEss1 on def.item_e1_IID =itemEss1.IID left  join item as itemEss2 on def.item_e2_IID =itemEss2.IID inner join item as botNAME on def.item_b_IID = botNAME.IID inner join component as botC on def.item_b_IID = botC.IID where itemDet.item_name LIKE '%".$searchPerfume."%' order by itemDet.item_name ) as d  LIMIT 20 ";
     $getPerfumeInfoSQLQuery = mysqli_query(openConn(), $getPerfumeDefInfoSQL);
     $jsonData = "";
     if($getPerfumeInfoSQLQuery){
@@ -305,10 +293,13 @@ function getSearchPerfume(){
 	            $jsonData = $jsonData . '{"id":"' . $row['item_IID'] . '",';
 	            $jsonData = $jsonData . '"name":"' . $row['item_name'] . '",';
 	            $jsonData = $jsonData . '"quan_a":"' . $row['item_quan_a'] . '",';
+	            $jsonData = $jsonData . '"id_e1":"' . $row['item_id_ess1'] . '",';
 	            $jsonData = $jsonData . '"name_e1":"' . $row['item_name_ess1'] . '",';
 	            $jsonData = $jsonData . '"quan_e1":"' . $row['item_quan_e1'] . '",';
+	            $jsonData = $jsonData . '"id_e2":"' . $row['item_id_ess2'] . '",';
 	            $jsonData = $jsonData . '"name_e2":"' . $row['item_name_ess2'] . '",';
 	            $jsonData = $jsonData . '"quan_e2":"' . $row['item_quan_e2'] . '",';
+	            $jsonData = $jsonData . '"id_b":"' . $row['id_b'] . '",';
 	            $jsonData = $jsonData . '"bottle":"' . $row['bottleInfo'] . '",';
 	            $jsonData = $jsonData . '"cost":"' . $row['item_cost'] . '",';  
 	            $jsonData = $jsonData . '"selling":"' . $row['item_selling'] . '"}';  
@@ -318,9 +309,11 @@ function getSearchPerfume(){
     	}
 	        $jsonData = '[' . $jsonData . ']';
     }
+	// file_put_contents("wwxxqq.txt", $jsonData);
+
     echo $jsonData;
 }
-function getAccessories(){
+function getTopAccessories(){
 	// $searchAccessories=$_GET['searchAccessories'];
 	$getAccessoriesSQL="SELECT item_name,item_cost,item_selling,com_quan,item.IID from item  inner join component  on item.IID = component.IID INNER JOIN (SELECT Count(ord_IID) as exp,ord_IID FROM order_s INNER JOIN component on order_s.ord_IID=component.IId where com_type='acc' group by ord_IID  order by exp DESC  limit 20 ) as countTable on item.IID = countTable.ord_IID";
     $getAccessoriesSQLQuery = mysqli_query(openConn(), $getAccessoriesSQL);
@@ -337,14 +330,34 @@ function getAccessories(){
 	            $jsonData = $jsonData . '"quantity":"' . $row['com_quan'] . '",';
 	            $jsonData = $jsonData . '"cost":"' . $row['item_cost'] . '",';  
 	            $jsonData = $jsonData . '"selling":"' . $row['item_selling'] . '"}';  
-	            
-	        
 	        }
     	}
-	        $jsonData = '[' . $jsonData . ']';
+	    $jsonData = '[' . $jsonData . ']';
     }
 
-	file_put_contents("xxqq.txt", $jsonData);
     echo $jsonData;
+}
+function getSearchAccessories(){
+	$searchAccessories=$_GET['searchAccessories'];
+	$getSearchAccessoriesQuery="SELECT d.* from (SELECT item.IID,item_name,item_cost,item_selling,com_quan FROM item inner join component on component.IID = item.IID where com_type='acc' and item_name LIKE '%".$searchAccessories."%' order by item_name) as d  LIMIT 20 ";
+	$getSearchAccessoriesQuerySQL=mysqli_query(openConn(),$getSearchAccessoriesQuery);
+	$jsonData = "";
+	if($getSearchAccessoriesQuerySQL){
+		while($row = mysqli_fetch_assoc($getSearchAccessoriesQuerySQL)){	
+			if($row != NULL){
+				if($jsonData != ""){
+					$jsonData = $jsonData . ",";
+				 }
+	            $jsonData = $jsonData . '{"id":"' . $row['IID'] . '",';
+	            $jsonData = $jsonData . '"name":"' . $row['item_name'] . '",';
+	            $jsonData = $jsonData . '"quantity":"' . $row['com_quan'] . '",';
+	            $jsonData = $jsonData . '"cost":"' . $row['item_cost'] . '",';  
+	            $jsonData = $jsonData . '"selling":"' . $row['item_selling'] . '"}';  
+	        }
+		}
+		$jsonData = '[' . $jsonData . ']';
+	}
+	file_put_contents("qqxxqq.txt", $jsonData);
+	echo $jsonData;
 }
 ?>

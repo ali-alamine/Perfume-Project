@@ -1,1 +1,1 @@
-INSERT INTO order_s(ord_ODID,ord_IID,ord_quantity,ord_price,ord_profit) VALUES('4','2','2','20','25')
+UPDATE component SET com_quan=com_quan-('100'/1000)*'1' WHERE IID='1'

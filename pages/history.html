@@ -52,24 +52,12 @@
                     <table id="sellTable" class ="table table-responsive table-striped text-center table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>
-                                    رقم الفاتورة
-                                    
-                                </th>
-                                <th>
-                                    التاريخ
-                                
-                                </th>
-                                <th>
-                                    إسم الزبون
-                                
-                                </th>
-                                <th>
-                                    مبلغ الفاتورة
-                                </th>
-                                <th>
-                                    الباقي
-                                </th>
+                                <th>رقم الفاتورة </th>
+                                <th>التاريخ  </th>
+                                <th>إسم الزبون  </th>
+                                <th>مبلغ الفاتورة</th>
+                                <th>الباقي  </th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,11 +75,11 @@
                                                     <thead>
                                                         <tr>
                                                             <td style="padding: 3px; font-size: 13px;"><label>إسم الزبون </label></td>
-                                                            <td style="font-size: 13px;"><label>{{clientNameDetail}}</label></td>
+                                                            <td style="font-size: 13px;"><label>{{sellsInvoiceHeader.client_fullName}}</label></td>
                                                         </tr>
                                                         <tr>
                                                             <td style="padding: 3px; font-size: 13px;"><label>رقم الهاتف</label></td>
-                                                            <td style="font-size: 13px;"><label>{{clientPhoneDetail}}</label></td>
+                                                            <td style="font-size: 13px;"><label>{{sellsInvoiceHeader.client_phone}}</label></td>
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -101,11 +89,11 @@
                                                     <thead>
                                                         <tr>
                                                             <td style="padding: 3px; font-size: 13px;"><label>رقم: </label></td>
-                                                            <td style="font-size: 13px;"><label>{{sellCode}}</label></td>
+                                                            <td style="font-size: 13px;"><label>{{sellsInvoiceHeader.ord_det_code}}</label></td>
                                                         </tr>
                                                         <tr>
                                                             <td style="padding: 3px; font-size: 13px;"><label>تاريخ: </label></td>
-                                                            <td style="font-size: 13px;"><label>{{sellDate}}</label></td>
+                                                            <td style="font-size: 13px;"><label>{{sellsInvoiceHeader.ord_det_date}}</label></td>
                                                         </tr>
                                                     </thead>
                                                 </table>
