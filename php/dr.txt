@@ -1,1 +1,0 @@
-UPDATE drawer SET drawer_total_return = drawer_total_return + 19000, drawer_total=drawer_total + 19000 WHERE drawer_Date= CURDATE() 
