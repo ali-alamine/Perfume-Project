@@ -678,7 +678,7 @@ app.controller('PerfumeALL', function($scope, $http) {
                 id_e1 : $scope.getPerfume[0]['id_e1'],
                 id_e2 : $scope.getPerfume[0]['id_e2'],
                 quan_e1 : $scope.getPerfume[0]['quan_e1'],
-                quan_e1 : $scope.getPerfume[0]['quan_e1'],
+                quan_e2 : $scope.getPerfume[0]['quan_e2'],
                 quan_a : $scope.getPerfume[0]['quan_a'],
                 cost:$scope.getPerfume[0]['cost'],
                 quantity : quantity, //quantity Perfume OR accessories
