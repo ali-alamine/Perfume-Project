@@ -168,7 +168,7 @@ function displaySupplyCodeToBe(){
 	$type=$_GET['type'];
 	$counterCode=1;
 	$facture_code=$type."-".$counterCode;
-	$getFacture_gateCodeQuery="SELECT SDID,sup_det_code from supply_detail";
+	$getFacture_gateCodeQuery="SELECT sup_det_code from supply_detail where ord_det_code LIKE '".$type."%' ORDER BY SDID DESC LIMIT 1";
 	$getFacture_gateCodeQuerySQL=mysqli_query(openConn(),$getFacture_gateCodeQuery);
 	$jsonData = "";
 	if($getFacture_gateCodeQuerySQL){

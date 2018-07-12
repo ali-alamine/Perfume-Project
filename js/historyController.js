@@ -32,7 +32,8 @@ app.controller('FactureALL', function($scope, $compile) {
             "width":"6%",
             "sortable": false,
             "render": function (data,meta,row) {
-             return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> ';}}
+            return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/>'+
+            '<input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
             
         ],
         "oLanguage": {
@@ -84,7 +85,8 @@ app.controller('FactureALL', function($scope, $compile) {
             "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
-             return '<input ng-click="showSellsDetailDialog('+data+')" id="showSellsDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> ';}}
+            return '<input ng-click="showSellsDetailDialog('+data+')" id="showSellsDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
+            '<input ng-click="removeFacture('+data+')" id="deleteFacture" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
             
         ],
         "oLanguage": {
@@ -136,8 +138,8 @@ app.controller('FactureALL', function($scope, $compile) {
             "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
-             return '<input ng-click="showSellDetailDialog('+data+')" id="showSellDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
-             '<input ng-click="removeFacture('+data+')" id="deleteFacture" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
+            return '<input ng-click="showSellDetailDialog('+data+')" id="showSellDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
+            '<input ng-click="removeFacture('+data+')" id="deleteFacture" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
             
         ],
         "oLanguage": {
@@ -382,7 +384,7 @@ app.controller('FactureALL', function($scope, $compile) {
         $.ajax(options);
     }
     $scope.removeFacture = function(id){
-       if(id != ""){
+        if(id != ""){
             swal({
                 title: "هل تريد إلغاء هذه الفاتورة؟",
                 text: "",
@@ -397,13 +399,12 @@ app.controller('FactureALL', function($scope, $compile) {
                 var options = {
                     type : "get",
                     url : '../php/history.php',
-                    data: {"function": "removeFacture","id":id},
+                    data: {"function": "removeFactureSupply","id":id},
                     dataType: 'json',
                     async : false,
                     cache : false,
                     success : function(response,status) {
-                        
-                        if(response["msg"] == "deleted")
+                        if(response["msg"] == "إلغاء")
                         {
                             swal({
                                 title: "فاتورة",
@@ -414,7 +415,10 @@ app.controller('FactureALL', function($scope, $compile) {
                                 confirmButtonText: "Ok",
                                 closeOnConfirm: true
                             }); 
-                            clientTable.ajax.reload(null,false);
+                            if($('#factureSellTabel').show())
+                                sellTable.ajax.reload(null,false);
+                            if($('#factureSellsTabel').show())
+                                sellsTable.ajax.reload(null,false);
                         }
                         else
                         {
@@ -455,5 +459,78 @@ app.controller('FactureALL', function($scope, $compile) {
             });
         }
     };
+    $scope.removeFactureSupply = function(id){
+        if(id != ""){
+            swal({
+                title: "هل تريد إلغاء هذه الفاتورة؟",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonClass: "btn-info",
+                cancelButtonText: "لا",
+                confirmButtonClass: "btn-info",
+                confirmButtonText: "نعم",
+                closeOnConfirm: false
+            },function(){
+                var options = {
+                    type : "get",
+                    url : '../php/history.php',
+                    data: {"function": "removeFacture","id":id},
+                    dataType: 'json',
+                    async : false,
+                    cache : false,
+                    success : function(response,status) {
+                        if(response["msg"] == "إلغاء")
+                        {
+                            swal({
+                                title: "فاتورة",
+                                text: response["msg"],
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-info",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            }); 
+                            supplyInvoicesTable.ajax.reload(null,false);
+                        }
+                        else
+                        {
+                            swal({
+                                title: "Error",
+                                text: response["msg"] ,
+                                type: "warning",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-info",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                        });
+                        }
+                    },
+                    error:function(request,response,error){
+                        swal({
+                          title: "Please contact your software developer",
+                          text: "ERROR: " + error,
+                          type: "warning",
+                          showCancelButton: false,
+                          confirmButtonClass: "btn-info",
+                          confirmButtonText: "Ok",
+                          closeOnConfirm: true
+                        });
+                    }
+                };
+                $.ajax(options);
+            });
+        }else{
+            swal({
+              title: "Please contact your software developer",
+              text: "ERROR: Id Not Found",
+              type: "warning",
+              showCancelButton: false,
+              confirmButtonClass: "btn-info",
+              confirmButtonText: "Ok",
+              closeOnConfirm: true
+            });
+        }
+    }
 });
 

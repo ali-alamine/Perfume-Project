@@ -53,5 +53,10 @@ switch($function){
         removeFacture();
         closeConn();
     break;
+    case 'removeFactureSupply' :
+        openConn();
+        removeFactureSupply();
+        closeConn();
+    break;
 };
 ?>

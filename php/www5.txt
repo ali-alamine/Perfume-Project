@@ -1,1 +1,0 @@
-INSERT INTO order_s(ord_ODID,ord_IID,ord_k_name,ord_quantity,ord_price,ord_profit) VALUES('5','7','acc 1','6','100','50')

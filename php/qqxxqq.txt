@@ -1,1 +1,1 @@
-[{"id":"7","name":"acc 1","quantity":"1999","cost":"50.00","selling":"100.00"}]
+[{"id":"7","name":"acc 10","quantity":"1000.000","cost":"1500.00","selling":"2000.00"}]

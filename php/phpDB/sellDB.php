@@ -45,17 +45,18 @@ function displayFactureCodeToBe(){
 	$type=$_GET['type'];
 	$counterCode=1;
 	$facture_code=$type."-".$counterCode;
-	$getFacture_gateCodeQuery="SELECT ODID,ord_det_code from order_details";
+	// $countID== ;
+	$getFacture_gateCodeQuery="SELECT ODID,ord_det_code from order_details where ord_det_code like '".$type."%' order by ODID desc limit 1";
 	$getFacture_gateCodeQuerySQL=mysqli_query(openConn(),$getFacture_gateCodeQuery);
 	$jsonData = "";
 	if($getFacture_gateCodeQuerySQL){
-		while ($row=mysqli_fetch_assoc($getFacture_gateCodeQuerySQL)) {
-			if($facture_code == $row['ord_det_code']){
-				$number = explode("-", $facture_code);
+		$row=mysqli_fetch_assoc($getFacture_gateCodeQuerySQL); 
+			// if($facture_code == $row['ord_det_code']){
+				$number = explode("-", $row['ord_det_code']);
 				$counterCode = intval($number[1])+1;
 				$facture_code=$type."-".$counterCode;
-			}
-		}
+			// }
+		// }
 	}
 	$jsonData = '{"FcodeToBe":"' . $facture_code . '"}';	
 	 echo $jsonData;
