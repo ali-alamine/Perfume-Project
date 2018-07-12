@@ -139,6 +139,10 @@ app.controller('PerfumeALL', function($scope, $http) {
         $.ajax(options);
     };
     $scope.getSearchClient = function(){
+        var idClient = $('#clientNameList option').filter(function() {
+            return this.value == $scope.clientData;
+        }).data('id');
+        idClient = idClient ? idClient : 'noId';
         var options={
             type : "get",
             url : "../php/client.php",
@@ -149,10 +153,6 @@ app.controller('PerfumeALL', function($scope, $http) {
             success : function(response,status) {
                 $scope.getClient=response;
                 $scope.safeApply(function() {});
-                var idClient = $('#clientNameList option').filter(function() {
-                    return this.value == $scope.clientData;
-                }).data('id');
-                idClient = idClient ? idClient : 'noId';
                 if(idClient!='noId'){
                     for(var i=0;i<$scope.getClient.length;i++){
                         if($scope.getClient[i].id==idClient){
@@ -176,6 +176,9 @@ app.controller('PerfumeALL', function($scope, $http) {
             }
         };
         $.ajax(options);
+        if(idClient=='noId' && $scope.clientData==""){
+            $scope.getClient=null;
+        }
     };
     $scope.getAllPerfume = function(){
         var url="../php/getAll.php";

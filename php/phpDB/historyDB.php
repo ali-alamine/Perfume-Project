@@ -275,12 +275,26 @@ function sellInvoiceDetails(){ //checked
 }
 function removeFacture(){
 	$id=$_GET['id'];
+	// $deleteOrderQuery="DELETE FROM order_s WHERE ord_ODID=".$id;
+	// file_put_contents("text11.txt", $jsonData);
+	// mysqli_query(openConn(),$deleteOrderQuery);
 	$deleteOrderDetailsQuery="DELETE FROM order_details WHERE ODID=".$id;
 	mysqli_query(openConn(),$deleteOrderDetailsQuery);
-	$deleteOrderQuery="DELETE FROM order_s WHERE ord_ODID=".$id;
-	mysqli_query(openConn(),$deleteOrderQuery);
 	$msg='إلغاء';
 	echo '{"msg":"'.$msg.'"}';
+}
+function removeFactureSupply(){
+
+	//SELECT sup_IID,sup_quan FROM `supply` where sup_SDID = id
+
+	// then loop over result and add sup_quan to item_quan based on item_IID
+
+	$id=$_GET['id'];
+	$deleteQuery="DELETE FROM supply WHERE sup_SDID=".$id;
+	mysqli_query(openConn(),$deleteQuery);
+	$deleteQuery="DELETE FROM supply_detail WHERE SDID=".$id;
+	mysqli_query(openConn(),$deleteQuery);
+	echo "{}";
 }
 ?>
 

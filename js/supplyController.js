@@ -183,11 +183,9 @@ app.controller('SupplyALL', function($scope, $http) {
         };
         $.ajax(options);
     };
-    $scope.addEssenceName_Modal = function(){
+    $scope.addModal = function(){
         $('#addModal').modal('show');
-        $('#bottleCapacity').hide();
-        $scope.add_titleName = "تعريف اسانس جديد";
-        $scope.add_labelName = "اسم الاسانس";
+        $scope.typeModal=null;
         $scope.add="";   
         $scope.capacity="";   
         inputNull("#add", 'false');
@@ -196,20 +194,16 @@ app.controller('SupplyALL', function($scope, $http) {
     };
     $scope.addBottleType_Modal = function(){
         $('#addModal').modal('show');
-        $('#bottleCapacity').show();
-        $scope.add_titleName = "تعريف قنينة جديدة";
-        $scope.add_labelName = "نوع القنينة";
+        $scope.typeModal=null;
         $scope.add="";   
         $scope.capacity="";   
         inputNull("#add", 'false');
         inputNull("#capacity", 'false');
         $('#add').focus();
     };
-    $scope.addAccessoriesName_Modal = function(){
-        $('#addModal').modal('show');
-        $('#bottleCapacity').hide();
-        $scope.add_titleName = "تعريف اسم اكسسوار جديد";
-        $scope.add_labelName = "اسم الإكسسوار";
+    $scope.addAccModal = function(){
+        $('#addAccModal').modal('show');
+        $scope.typeModal="accessories";
         $scope.add="";   
         $scope.capacity=""; 
         inputNull("#add", 'false');
@@ -284,20 +278,20 @@ app.controller('SupplyALL', function($scope, $http) {
         }
     };
     $scope.addName = function(){
-        var labelName=$scope.add_labelName;
+        var labelName=$scope.typeModal;
         var add = $scope.add;
         var data='';
         if(add!="" && add!=undefined){
-            if(labelName=="اسم الاسانس"){
+            if(labelName=="essence"){
                 data= {'essence': add,'function': 'addEssence'}; 
-            } else if(labelName=="نوع القنينة"){
+            } else if(labelName=="bottle"){
                 var capacity=$scope.capacity;
                 if(capacity!="" && capacity!=undefined){
                     data= {'bottleType': add,'bottleCapacity': capacity,'function': "addBottleType"};
                 } else if(capacity=="" || capacity==undefined){
                     inputNull("#capacity", 'true');
                 }
-            } else if(labelName=="اسم الإكسسوار") {
+            } else if(labelName=="accessories") {
                 data= {'accessories': add,'function': "addAccessories"};
             }
             if(data!=''){
@@ -309,16 +303,18 @@ app.controller('SupplyALL', function($scope, $http) {
                     async : false,
                     cache : false,
                     success : function(response,status) {
-                        if(labelName=="اسم الاسانس"){
+                        if(labelName=="essence"){
                             $scope.getAllEssence();
+                            $('#addModal').modal('hide');
                         }
-                        else if(labelName=="نوع القنينة"){
+                        else if(labelName=="bottle"){
                             $scope.getAllBottle();
+                            $('#addModal').modal('hide');
                         }
-                        else if(labelName=="اسم الإكسسوار"){
+                        else if(labelName=="accessories"){
                             $scope.getAllAccessories();
+                            $('#addAccModal').modal('hide');
                         }
-                        $('#addModal').modal('hide');
                     },
                     error:function(request,response,error){
                         swal({
