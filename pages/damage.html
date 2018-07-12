@@ -1,0 +1,121 @@
+<html>
+<head>
+    <title>تلف</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../bootstrap-3-arabic-master/dist/css/bootstrap-arabic.min.css">
+    <script src="../js/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../design/sweetAlert/sweetalert.css">
+    <script src="../design/sweetAlert/sweetalert.js"></script>
+    <script src="../design/sweetAlert/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../design/mainNav.css">
+    <link rel="stylesheet" type="text/css" href="../design/damage.css">
+    <script src="../jquery/jquery.min.js"></script>
+    <script src="../bootstrap-3-arabic-master/dist/js/bootstrap-arabic.min.js"></script>
+    <script src="../js/animatescroll.min.js"></script>
+    <script src="../js/mainPage.js"></script>
+    <script src="../js/damage.js"></script>
+    <script src="../js/damageController.js"></script>
+    <link rel="stylesheet" type="text/css" href="../jquery/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+    <script src="../jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+</head>
+<body>
+    <div class="navigationBar">
+        <div class="col-xs-12">
+            <nav class="links navbar-default">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class=""><a name="sell" class="link" href="sell.html">بيع</a></li>
+                    <li class=""><a name="drawer" class="link" href="drawer.html">صندوق</a></li>
+                    <li class=""><a name="stock" class="link" href="stock.html">المخزون</a></li>
+                    <li class=""><a name="history" class="link" href="history.html">الفواتير</a></li>
+                    <li class=""><a name="definitionPerfume" class="link" href="definitionPerfume.html">تعريف عطر</a></li>
+                    <li class=""><a name="supply" class="link" href="supply.html">المؤن</a></li>
+                    <li class=""><a name="client" class="link" href="client.html">زبون / مورد</a></li>
+                    <li class="btn-info"><a name="damage" class="activeLink" href="#">تلف</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div ng-app="PERFUME">
+        <div ng-controller="DamageALL" class="col-xs-12 tabcontent">
+            <div class="row tables">
+                <div class="col-xs-4">
+                    <div class ="tableButton col-xs-12 btn damageEssenceButton"><h3>تلف اسانس</h3></div>
+                    <div class ="tableButton col-xs-12 btn damageAlcoholButton"><h3>تلف كحول</h3></div>
+                    <div class ="tableButton col-xs-12 btn damageBottleButton"><h3>تلف قنينة</h3></div>
+                    <div class ="tableButton col-xs-12 btn damageItemButton"><h3>تلف إكسسوار</h3></div>
+                </div>
+                <div class="col-xs-8 damageEssence">
+                    <form autocomplete="off">
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">إسم الاسانس:</lable>
+                            <input  id="essenceName"  list="essencesList" class="form-control" ng-model="essName" >
+                            <datalist id="essencesList" >
+                                <option ng-repeat="e in allEssenceName" data-id="{{e.id}}" value="{{e.essenceName}}">
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">الكمية:</lable>
+                            <input id="essenceQuantity" type="number" ng-model="essenceQuantity" class="form-control" placeholder="ملليلتر" min="0" />
+                        </div>
+                         <div class="form-group">
+                            <button type="submit" ng-click="damageEssence()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-8 damageAlcohol">
+                    <form>
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">الكمية:</lable>
+                            <input type="number" id="alcoholQuantity" ng-model="alcoholQuantity" class="form-control" placeholder="ملليلتر" min="0" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" ng-click="damageAlcohol()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-8 damageBottle">
+                    <form autocomplete="off" >
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">نوع القنينة:</lable>
+                            <input id="bottleType" list="bottlesList" class="form-control" ng-model="bottleType">
+                            <datalist id="bottlesList">
+                                <option ng-repeat="b in allBottle" data-id="{{b.id}}" value="{{b.botName}} | {{b.botCapacity}}">
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">الكمية:</lable>
+                            <input id="bottleQuantity" type="number" id="bottleQuantity" ng-model="bottleQuantity" class="form-control" placeholder="قنينة" min="0">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" ng-click="damageBottle()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-8 damageItem">
+                    <form autocomplete="off">
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">إسم الإكسسوار:</lable>
+                            <input  id="itemName"  list="accessoriesList" class="form-control" ng-model="itemName">
+                            <datalist id="accessoriesList">
+                                <option ng-repeat="a in allAcc" data-id="{{a.id}}" value="{{a.accName}}">
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <lable style="font-size: 20px;">الكمية:</lable>
+                            <input id="itemQuantity" type="number" ng-model="itemQuantity" class="form-control" placeholder="قطعة">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" ng-click="damageItem()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

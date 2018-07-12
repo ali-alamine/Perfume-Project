@@ -1,0 +1,42 @@
+
+.navigationBar{
+  /*font-weight:bold;*/
+  /*width: 100%;*/
+  color: black;
+}
+.links{
+  border:0px solid;
+}
+.link{
+  /*font-weight: bold;*/
+  background-color: lightblue;
+  height:70px;
+  color:black;
+  font-size: 25px;
+}
+.activeLink{
+  font-size: 25px;
+  height:70px;
+/*  font-weight: bold;*/
+  color:black;
+}
+.nav > li > a:hover{
+    border-radius: solid 0px;
+
+}
+.nav-tabs.nav-justified>li>a {
+    margin-right: 0;
+    border-radius: 0px;
+
+}
+
+.navbar-default {
+  /*margin-top: 10px;*/
+  border-radius: 1px;
+  /*border: solid rgb(0, 191, 255) 1px;*/
+  background-color: #B0C4DE;
+}
+.nav > li > .activeLink:hover{
+    background-color: skyblue;
+    
+}
