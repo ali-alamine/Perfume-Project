@@ -78,7 +78,6 @@ clientTable.buttons().container().appendTo( $('#test', clientTable.table().conta
 
     supplierTable=$('#supplierTable').DataTable({
         "paging": true,
-        'responsive':true,
         "serverSide": true,
         "processing":true,
         "ordering": true,

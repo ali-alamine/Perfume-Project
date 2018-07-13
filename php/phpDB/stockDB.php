@@ -18,11 +18,11 @@ function essenceDataTable(){ //checked
 	if(isset($_GET["search"]["value"]) && !empty($_GET["search"]["value"]))
 	{
  		$search = $_GET["search"]["value"];
- 		$getAllEssenceQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.IID,'/',item.item_name)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan, supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE (component.com_type='ess' OR component.com_type='alc') AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+ 		$getAllEssenceQuery="SELECT item.IID as itemID, CONCAT(item.IID,'/',item.item_name)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan FROM ITEM inner join component on item.IID=component.IID WHERE (component.com_type='ess' OR component.com_type='alc') AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}
 	else
 	{
-		$getAllEssenceQuery=" SELECT DISTINCT(item.IID) as itemID, CONCAT(item.IID,'/',item.item_name)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan, supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE (component.com_type= 'ess' OR component.com_type='alc') ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+		$getAllEssenceQuery=" SELECT item.IID as itemID, CONCAT(item.IID,'/',item.item_name)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan FROM ITEM inner join component on item.IID=component.IID WHERE (component.com_type= 'ess' OR component.com_type='alc') ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}
 	$getAllEssenceQuerySQL = mysqli_query(openConn(),$getAllEssenceQuery); 
 	$rowsCountFilter = mysqli_num_rows($getAllEssenceQuerySQL);
@@ -37,8 +37,7 @@ function essenceDataTable(){ //checked
 				$jsonData = $jsonData . '"item_name":"' . $row['itemName'] . '",';
 				$jsonData = $jsonData . '"item_cost":"' . $row['itemCost'] . '",';
 				$jsonData = $jsonData . '"item_selling":"' . $row['itemPrice'] . '",';
-				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '",';
-				$jsonData = $jsonData . '"supplier_name":"' . $row['supplierName'] . '"}';
+				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '"}';
 			}
 		}
 	}
@@ -65,11 +64,11 @@ function bottleDataTable(){ //checked
 	if(isset($_GET["search"]["value"]) && !empty($_GET["search"]["value"]))
 	{
  		$search = $_GET["search"]["value"];
- 		$getAllBottleQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,' | ',component.com_capacity,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan, supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE component.com_type='bot' AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+ 		$getAllBottleQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,' | ',component.com_capacity,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan FROM ITEM inner join component on item.IID=component.IID WHERE component.com_type='bot' AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}
 	else
 	{
-		$getAllBottleQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,' | ',component.com_capacity,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan, supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE component.com_type= 'bot' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+		$getAllBottleQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,' | ',component.com_capacity,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan FROM ITEM  inner join component on item.IID=component.IID WHERE component.com_type= 'bot' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}	
 	$getAllBottleQuerySQL = mysqli_query(openConn(),$getAllBottleQuery); 
 	$rowsCountFilter = mysqli_num_rows($getAllBottleQuerySQL);
@@ -84,8 +83,7 @@ function bottleDataTable(){ //checked
 				$jsonData = $jsonData . '"item_name":"' . $row['itemName'] . '",';
 				$jsonData = $jsonData . '"item_cost":"' . $row['itemCost'] . '",';
 				$jsonData = $jsonData . '"item_selling":"' . $row['itemPrice'] . '",';
-				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '",';
-				$jsonData = $jsonData . '"supplier_name":"' . $row['supplierName'] . '"}';
+				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '"}';
 			}
 		}
 	}
@@ -112,11 +110,11 @@ function accDataTable(){ //checked
 	if(isset($_GET["search"]["value"]) && !empty($_GET["search"]["value"]))
 	{
  		$search = $_GET["search"]["value"];
- 		$getAllAccQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan,component.com_date_exp as itemDate , supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE component.com_type='acc' AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+ 		$getAllAccQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan,component.com_date_exp as itemDate  FROM ITEM  inner join component on item.IID=component.IID WHERE component.com_type='acc' AND item.item_name like '%".$search."%' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}
 	else
 	{
-		$getAllAccQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan,component.com_date_exp as itemDate , supplier.supplier_name as supplierName FROM ITEM INNER JOIN supply ON item.IID = supply.sup_IID INNER JOIN supply_detail ON supply.sup_SDID = supply_detail.SDID INNER JOIN supplier on supply_detail.sup_det_SRID = supplier.SRID inner join component on item.IID=component.IID WHERE component.com_type= 'acc' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
+		$getAllAccQuery="SELECT DISTINCT(item.IID) as itemID, CONCAT(item.item_name,'/',item.IID)  as itemName,item.item_cost as itemCost,item.item_selling as itemPrice, component.com_quan as itemQuan,component.com_date_exp as itemDate FROM ITEM inner join component on item.IID=component.IID WHERE component.com_type= 'acc' ".$orderString." LIMIT ".$rowsReq." OFFSET ".$start;
 	}
 	$getAllAccQuerySQL = mysqli_query(openConn(),$getAllAccQuery); 
 	$rowsCountFilter = mysqli_num_rows($getAllAccQuerySQL);
@@ -132,8 +130,7 @@ function accDataTable(){ //checked
 				$jsonData = $jsonData . '"item_cost":"' . $row['itemCost'] . '",';
 				$jsonData = $jsonData . '"item_selling":"' . $row['itemPrice'] . '",';
 				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '",';
-				$jsonData = $jsonData . '"com_date_exp":"' . $row['itemDate'] . '",';
-				$jsonData = $jsonData . '"supplier_name":"' . $row['supplierName'] . '"}';
+				$jsonData = $jsonData . '"com_date_exp":"' . $row['itemDate'] . '"}';
 			}
 		}
 	}

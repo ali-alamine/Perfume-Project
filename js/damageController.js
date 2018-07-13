@@ -1,21 +1,12 @@
 var app = angular.module('PERFUME', []);
 app.controller('DamageALL', function($scope, $http) {
-
-    
-    $scope.allEssenceName;
-    $scope.allBottle;
+    $scope.essenceSearchResult;
     $scope.allAcc;
-    $scope.essenceQuantity;
     $scope.essName;
     $scope.itemName;
     $scope.alcoholQuantity;
-    
-    
-    angular.element(document).ready(function () {
-        $scope.getAllEssenceName();
-        $scope.getAllBottle();
-        $scope.getAllAcc();
-    });
+    $scope.essenceID;
+    $scope.essenceQuantity = null;
 
     $scope.safeApply = function(fn) {
         var phase = this.$root.$$phase;
@@ -28,21 +19,58 @@ app.controller('DamageALL', function($scope, $http) {
         }
     }
 
-    $scope.getAllEssenceName = function(){
-
-        var url="../php/damage.php";
-        var data = {"function":"getAllEssence"};
-        var options={
+    $scope.searchEssence = function(){
+        $scope.essenceID = $('#essencesList option').filter(function() {
+                    return this.value == $scope.essName;
+          }).data('id');
+        $scope.essenceID = $scope.essenceID ? $scope.essenceID : 'noId';
+        if($scope.essenceID=='noId' && $scope.essName!=''){
+            var options={
             type : "get",
-            url : url,
-            data: data,
+            url : "../php/damage.php",
+            data: {"function":"searchEssence","essenceName" : $scope.essName},
             dataType: 'json',
             async : false,
             cache : false,
             success : function(response,status) {
-                $scope.allEssenceName=response;
-                console.log(response);
-                $scope.safeApply(function() {});
+                $scope.essenceSearchResult=response;
+                $scope.safeApply();
+            },
+            error:function(request,response,error){
+                swal({
+                  title: "Please contact your software developer",
+                  text: "ERROR: " + error,
+                  type: "warning",
+                  showCancelButton: false,
+                  confirmButtonClass: "btn-info",
+                  confirmButtonText: "Ok",
+                  closeOnConfirm: true
+                });
+            }
+            };
+        $.ajax(options);
+        }
+        else
+        {
+            $scope.essenceSearchResult=null;
+        }
+    }
+    $scope.searchBottle = function(){
+        $scope.bottleID = $('#bottlesList option').filter(function() {
+                    return this.value == $scope.bottleType;
+          }).data('id');
+        $scope.bottleID = $scope.bottleID ? $scope.bottleID : 'noId';
+        if($scope.bottleID=='noId' && $scope.bottleType!=''){
+            var options={
+            type : "get",
+            url : "../php/damage.php",
+            data: {"function":"searchBottle","bottleKeywordSearch" : $scope.bottleType},
+            dataType: 'json',
+            async : false,
+            cache : false,
+            success : function(response,status) {
+                $scope.bottleSearchResult=response;
+                $scope.safeApply();
             },
             error:function(request,response,error){
                 swal({
@@ -57,21 +85,28 @@ app.controller('DamageALL', function($scope, $http) {
             }
         };
         $.ajax(options);
+        }
+        else
+        {
+            $scope.bottleSearchResult=null;
+        }
     }
-    $scope.getAllBottle = function(){
-        var url="../php/damage.php";
-        var data = {"function":"getAllBottle"};
-        var options={
+    $scope.searchAccessory = function(){
+        $scope.accessoryID = $('#accessoriesList option').filter(function() {
+                    return this.value == $scope.itemName;
+          }).data('id');
+        $scope.accessoryID = $scope.accessoryID ? $scope.accessoryID : 'noId';
+        if($scope.accessoryID=='noId' && $scope.itemName!=''){
+            var options={
             type : "get",
-            url : url,
-            data: data,
+            url : "../php/damage.php",
+            data: {"function":"searchAccessory","accessoryName" :$scope.itemName},
             dataType: 'json',
             async : false,
             cache : false,
             success : function(response,status) {
-
-                $scope.allBottle=response;
-                $scope.safeApply(function() {});
+                $scope.accessorySearchResult=response;
+                $scope.safeApply();
             },
             error:function(request,response,error){
                 swal({
@@ -86,58 +121,23 @@ app.controller('DamageALL', function($scope, $http) {
             }
         };
         $.ajax(options);
+        }
+        else
+        {
+            $scope.accessorySearchResult=null;
+        }
     }
-    $scope.getAllAcc = function(){
-        var url="../php/damage.php";
-        var data = {"function":"getAllAcc"};
-        var options={
-            type : "get",
-            url : url,
-            data: data,
-            dataType: 'json',
-            async : false,
-            cache : false,
-            success : function(response,status) {
-                $scope.allAcc=response;
-                $scope.safeApply(function() {});
-            },
-            error:function(request,response,error){
-                swal({
-                  title: "Please contact your software developer",
-                  text: "ERROR: " + error,
-                  type: "warning",
-                  showCancelButton: false,
-                  confirmButtonClass: "btn-info",
-                  confirmButtonText: "Ok",
-                  closeOnConfirm: true
-                });
-            }
-        };
-        $.ajax(options);
-    }
-
     $scope.damageEssence = function(){
-        
-
-        var essName=$scope.essName;
-        var essenceQuantity = parseInt($scope.essenceQuantity);
-
-        
+        var essenceQuantity = parseFloat($scope.essenceQuantity);
         var msg=''; 
-        if(essenceQuantity == null || essenceQuantity<=0){
+        if(essenceQuantity == null || essenceQuantity<=0 || isNaN(essenceQuantity) ){
             msg+="الكمية : معلومات ناقصة. \n";
         }
-        if(essName ==null){
+        if($scope.essName ==null || $scope.essName==""){
             msg+="إسانس : معلومات ناقصة. \n";
         } else { 
-            var id = $('#essencesList option').filter(function() {
-                return this.value == $scope.essName;
-            }).data('id');
-
-            
-            var essenceId = id ? id : 'noId';
-            if(essenceId =="noId"){
-                msg+="إسانس '"+essenceName+"' : غيل مسجل. \n";
+             if($scope.essenceID =="noId"){
+                msg+="إسانس '"+$scope.essName+"' : غيل مسجل. \n";
             }
         } 
         if(msg != ''){
@@ -152,7 +152,7 @@ app.controller('DamageALL', function($scope, $http) {
             });
         } else if(msg == '') {
             var url = "../php/damage.php";
-            var data = {"function": "damageEssence","essenceId": essenceId,"essenceQuantity": essenceQuantity};
+            var data = {"function": "damageEssence","essenceId": $scope.essenceID,"essenceQuantity": essenceQuantity};
             var options = {
                 type : "get",
                 url : "../php/damage.php",
@@ -162,7 +162,16 @@ app.controller('DamageALL', function($scope, $http) {
                 cache : false,
                 success : function(response,status) {
                     $scope.essName= '';
-                    $scope.essenceQuantity= '';
+                    $scope.essenceQuantity= "";
+                    swal({
+                        title: "تلف اسانس",
+                        text: "تم تلف كمية الاسانس",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    });
                 },
                 error:function(request,response,error){
                     swal({
@@ -181,7 +190,7 @@ app.controller('DamageALL', function($scope, $http) {
     }
     $scope.damageAlcohol = function(){
         var alcoholQuantity = $scope.alcoholQuantity;
-        if(alcoholQuantity ==null){
+        if(alcoholQuantity ==null || alcoholQuantity <=0 ){
             swal({
                 title: "إنتبه!",
                 text: "الكمية : معلومات ناقصة." ,
@@ -200,7 +209,7 @@ app.controller('DamageALL', function($scope, $http) {
                 async : false,
                 cache : false,
                 success : function(response,status) {
-                    $scope.alcoholQuantity= '';
+                    $scope.alcoholQuantity= "";
                 },
                 error:function(request,response,error){
                     swal({
@@ -218,21 +227,16 @@ app.controller('DamageALL', function($scope, $http) {
         }
     }
     $scope.damageBottle = function(){
-        var bottleType = $scope.bottleType;
-        var bottleQuantity = $scope.bottleQuantity;
         var msg=''; 
-        if(bottleQuantity ==null){
+        
+        if($scope.bottleQuantity == null || $scope.bottleQuantity<=0 || isNaN($scope.bottleQuantity))
             msg+="الكمية : معلومات ناقصة. \n";
-        }
-        if(bottleType ==null){
+        
+        if($scope.bottleType ==null || $scope.bottleType == ""){
             msg+="قنينة : معلومات ناقصة. \n";
-        } else { 
-            var id = $('#bottlesList option').filter(function() {
-                return this.value == bottleType;
-            }).data('id');
-            var bottleId = id ? id : 'noId';
-            if(bottleId =="noId"){
-                msg+="قنينة '"+bottleType+"' : غيل مسجلة. \n";
+        } else {
+            if($scope.bottleID =="noId"){
+                msg+="قنينة '"+$scope.bottleType+"' : غيل مسجلة. \n";
             }
         } 
         if(msg != ''){
@@ -249,13 +253,22 @@ app.controller('DamageALL', function($scope, $http) {
             var options = {
                 type : "get",
                 url : '../php/damage.php',
-                data: {"function": "damageBottle",'bottleId': bottleId,'bottleQuantity': bottleQuantity},
+                data: {"function": "damageBottle",'bottleId': $scope.bottleID,'bottleQuantity': $scope.bottleQuantity},
                 dataType: "json",
                 async : false,
                 cache : false,
                 success : function(response,status) {
                     $scope.bottleType= '';
-                    $scope.bottleQuantity= '';
+                    $scope.bottleQuantity= "";
+                    swal({
+                        title:"تلف قنينية",
+                        text: "تم تلف القنينة بالكمية المحددة",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    });
                 },
                 error:function(request,response,error){
                     swal({
@@ -273,21 +286,16 @@ app.controller('DamageALL', function($scope, $http) {
         }
     }
     $scope.damageItem = function(){
-        var itemName = $scope.itemName;
-        var itemQuantity = $scope.itemQuantity;
+        var itemQuantity = parseInt($scope.itemQuantity);
         var msg=''; 
-        if(bottleQuantity ==null){
+        if(itemQuantity == null || itemQuantity<=0 || isNaN(itemQuantity) ){
             msg+="الكمية : معلومات ناقصة. \n";
         }
-        if(itemName ==null){
+        if($scope.itemName ==null || $scope.itemName==""){
             msg+="إكسسوار : معلومات ناقصة. \n";
-        } else { 
-            var id = $('#accessoriesList option').filter(function() {
-                return this.value == itemName;
-            }).data('id');
-            var itemId = id ? id : 'noId';
-            if(itemId =="noId"){
-                msg+="إكسسوار '"+itemName+"' : غيل مسجل. \n";
+        } else {
+            if($scope.accessoryID =="noId"){
+                msg+="إكسسوار '"+$scope.itemName+"' : غيل مسجل. \n";
             }
         } 
         if(msg != ''){
@@ -304,13 +312,23 @@ app.controller('DamageALL', function($scope, $http) {
             var options = {
                 type : "get",
                 url : '../php/damage.php',
-                data: {'function': 'damageItem','itemId': itemId,'itemQuantity': itemQuantity},
+                data: {'function': 'damageItem','itemId': $scope.accessoryID,'itemQuantity': itemQuantity},
                 dataType: "json",
                 async : false,
                 cache : false,
                 success : function(response,status) {
                     $scope.itemName= '';
-                    $scope.itemQuantity= '';
+                    $scope.itemQuantity= "";
+                    swal({
+                        title: "تلف اكسسوار",
+                        text: "تم تلف الاكسسوار بالكمية المحددة",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    });
+
                 },
                 error:function(request,response,error){
                     swal({

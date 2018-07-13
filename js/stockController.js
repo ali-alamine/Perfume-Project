@@ -31,8 +31,7 @@ app.controller('StockALL', function($scope, $compile) {
             },
             { "data":  "com_quan"},
             { "data": "item_cost" },
-            { "data":  "item_selling"},
-            { "data":"supplier_name"}
+            { "data":  "item_selling"}
             
         ],
         "oLanguage": {
@@ -62,7 +61,6 @@ app.controller('StockALL', function($scope, $compile) {
         "serverSide": true,
         "processing":true,
         "ordering": true,
-        'responsive':true,
         "pagingType": "full_numbers",
         "searching": true,
         "lengthMenu": [[5,10, 25,50,100,150,200,300,400, -1], [5,10, 25,50,100,150,200,300,400, "الكل"]],
@@ -85,8 +83,7 @@ app.controller('StockALL', function($scope, $compile) {
             },
             { "data":  "com_quan"},
             { "data": "item_cost" },
-            { "data":  "item_selling"},
-            { "data":"supplier_name"}
+            { "data":  "item_selling"}
             
         ],
         "oLanguage": {
@@ -115,7 +112,6 @@ app.controller('StockALL', function($scope, $compile) {
         "paging": true,
         "serverSide": true,
         "processing":true,
-        'responsive':true,
         "ordering": true,
         "pagingType": "full_numbers",
         "searching": true,
@@ -140,8 +136,7 @@ app.controller('StockALL', function($scope, $compile) {
             { "data":  "com_quan"},
             { "data": "item_cost" },
             { "data":  "item_selling"},
-            {"data":"com_date_exp"},
-            { "data":"supplier_name"}
+            {"data":"com_date_exp"}
             
         ],
         "oLanguage": {

@@ -6,19 +6,14 @@ include('phpDB/damageDB.php');
 $function = $_GET['function'];
 
 switch($function){
-    case 'getAllEssence' :
-		openConn();
-        getAllEssence();
+    case 'searchBottle' :
+        openConn();
+        searchBottle();
         closeConn();
         break;
-    case 'getAllBottle' :
+    case 'searchAccessory' :
         openConn();
-        getAllBottle();
-        closeConn();
-        break;
-    case 'getAllAcc' :
-        openConn();
-        getAllAcc();
+        searchAccessory();
         closeConn();
         break;
     case 'damageEssence' :
@@ -41,6 +36,11 @@ switch($function){
         damageItem();
         closeConn();
         break;
+    case 'searchEssence' :
+        openConn();
+        searchEssence();
+        closeConn();
+    break;
         
 };
 ?>

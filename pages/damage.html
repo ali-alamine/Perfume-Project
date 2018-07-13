@@ -49,9 +49,9 @@
                     <form autocomplete="off">
                         <div class="form-group">
                             <lable style="font-size: 20px;">إسم الاسانس:</lable>
-                            <input  id="essenceName"  list="essencesList" class="form-control" ng-model="essName" >
-                            <datalist id="essencesList" >
-                                <option ng-repeat="e in allEssenceName" data-id="{{e.id}}" value="{{e.essenceName}}">
+                            <input  id="essenceName"  list="essencesList" class="form-control" ng-model="essName" ng-change="searchEssence()" >
+                            <datalist id="essencesList"  >
+                                <option ng-repeat="e in essenceSearchResult" data-id="{{e.id}}" value="{{e.essenceName}}">
                             </datalist>
                         </div>
                         <div class="form-group">
@@ -80,9 +80,9 @@
                     <form autocomplete="off" >
                         <div class="form-group">
                             <lable style="font-size: 20px;">نوع القنينة:</lable>
-                            <input id="bottleType" list="bottlesList" class="form-control" ng-model="bottleType">
+                            <input id="bottleType" list="bottlesList" class="form-control" ng-model="bottleType" ng-change="searchBottle()">
                             <datalist id="bottlesList">
-                                <option ng-repeat="b in allBottle" data-id="{{b.id}}" value="{{b.botName}} | {{b.botCapacity}}">
+                                <option ng-repeat="b in bottleSearchResult" data-id="{{b.id}}" value="{{b.botName}} | {{b.botCapacity}}">
                             </datalist>
                         </div>
                         <div class="form-group">
@@ -99,9 +99,9 @@
                     <form autocomplete="off">
                         <div class="form-group">
                             <lable style="font-size: 20px;">إسم الإكسسوار:</lable>
-                            <input  id="itemName"  list="accessoriesList" class="form-control" ng-model="itemName">
+                            <input  id="itemName"  list="accessoriesList" class="form-control" ng-model="itemName" ng-change="searchAccessory()">
                             <datalist id="accessoriesList">
-                                <option ng-repeat="a in allAcc" data-id="{{a.id}}" value="{{a.accName}}">
+                                <option ng-repeat="a in accessorySearchResult" data-id="{{a.id}}" value="{{a.accName}}">
                             </datalist>
                         </div>
                         <div class="form-group">

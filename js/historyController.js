@@ -31,7 +31,7 @@ app.controller('FactureALL', function($scope, $compile) {
             "searchable": false,
             "sortable": false,
             "render": function (data,meta,row) {
-            return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/>'+
+            return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn  fa fa-edit" value="&#xf044" title="عرض"/>'+
             ' <input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
             
         ],
