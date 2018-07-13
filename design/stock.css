@@ -62,9 +62,6 @@ table{
 
 /*Datatable override CSS */
 
-.table th {
-  text-align: center;
-}
 
 .dataTables_filter label { 
 	width: 500%;
@@ -84,51 +81,53 @@ table{
 	height: 30px;
 	border-radius: 10px;
 }
-#essenceTable
+
+#bottleTable , #accTable , #essenceTable
 {
 	width: 100%;
 }
 
-#bottleTable
+#essenceTable_filter.dataTables_filter , #bottleTable_filter.dataTables_filter , #accTable_filter.dataTables_filter
 {
-	width: 100%;
-}
-
-#accTable
-{
-	width: 100%;
-}
-
-#essenceTable_filter.dataTables_filter
-{
-	
 	width: 90%;
 }
 
-#bottleTable_filter.dataTables_filter
-{
-	
-	width: 90%;
-}
-
-#accTable_filter.dataTables_filter
-{
-	
-	width: 90%;
-}
-
-#essenceTable_wrapper.dataTables_wrapper
-{
-	background-color: lightblue;
-}
-
-#bottleTable_wrapper.dataTables_wrapper
+#essenceTable_wrapper.dataTables_wrapper, #bottleTable_wrapper.dataTables_wrapper , #accTable_wrapper.dataTables_wrapper
 {
 	background-color: lightblue;
 }
 
 
-#accTable_wrapper.dataTables_wrapper
+.dataTables_filter label { 
+	width: 500%;
+	height: 30px;
+	border-radius: 10px;
+	border-color: skyblue;
+
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+
+.dataTables_filter input { 
+	margin-top: 5px;
+	margin-bottom: 10px;
+	width: 800px;
+	height: 30px;
+	border-radius: 10px;
+}
+
+#supplyInvoicesTable , #sellTable , #sellsTable
+{
+	width: 100%;
+}
+
+#supplyInvoicesTable.dataTables_filter , #sellTable.dataTables_filter ,#sellsTable.dataTables_filter 
+{
+	width: 90%;
+}
+
+#supplyInvoicesTable_wrapper.dataTables_wrapper, #sellTable_wrapper.dataTables_wrapper , #sellsTable_wrapper.dataTables_wrapper
 {
 	background-color: lightblue;
 }

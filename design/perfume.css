@@ -89,3 +89,40 @@ position: center;
 .table>thead{
 	border-top: solid black 1px;
 }
+
+
+
+
+#definitionPerfumeTable
+{
+	width: 100%;
+}
+
+#definitionPerfumeTable.dataTables_filter 
+{
+	width: 90%;
+}
+
+#definitionPerfumeTable_wrapper.dataTables_wrapper
+{
+	background-color: lightblue;
+}
+
+.dataTables_filter label { 
+	width: 500%;
+	border-radius: 10px;
+	height: 30px;
+	border-color: skyblue;
+	margin-bottom: 20px;
+	margin-right: 5px;
+}
+
+
+.dataTables_filter input { 
+	margin-top: 5px;
+	margin-bottom: 10px;
+	width: 1000px;
+	height: 30px;
+	border-radius: 10px;
+}
+

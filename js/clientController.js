@@ -45,7 +45,7 @@ app.controller('Client&SupplierALL', function($scope, $compile) {
             { "data": "client_debit" },
             { "data":"CID",
             "searchable": false,
-            "width":"6%",
+            "width":"10%",
             "sortable": false,
             "render": function (data,meta,row) {
              return '<input ng-click="removeClient('+data+')" id="deleteClientBtn" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/> <input ng-click="updateModal('+data+')" id="deleteClientBtn" type="button" class="glyphicon btn-info btn" value="&#xf044" title="تعديل"/> ';}}
@@ -77,8 +77,8 @@ clientTable.buttons().container().appendTo( $('#test', clientTable.table().conta
 
 
     supplierTable=$('#supplierTable').DataTable({
-        "processing": false,
         "paging": true,
+        'responsive':true,
         "serverSide": true,
         "processing":true,
         "ordering": true,
@@ -99,7 +99,7 @@ clientTable.buttons().container().appendTo( $('#test', clientTable.table().conta
             { "data": "supplier_debit" },
             { "data":"SRID",
             "searchable": false,
-            "width":"6%",
+            "width":"10%",
             "sortable": false,
             "render": function (data,meta,row) {
              return '<input ng-click="removeSupplier('+data+')" id="deleteClientBtn" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/> <input ng-click="updateModalSupplier('+data+')" id="updateSupplier" type="button" class="glyphicon btn-info btn" value="&#xf044" title="تعديل"/> ';}}

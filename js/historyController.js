@@ -29,11 +29,10 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"sup_det_rem_amount"},
             { "data":"SDID",
             "searchable": false,
-            "width":"6%",
             "sortable": false,
             "render": function (data,meta,row) {
             return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/>'+
-            '<input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
+            ' <input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
             
         ],
         "oLanguage": {
@@ -82,7 +81,6 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"ord_det_rem_amount"},
             { "data":"ODID",
             "searchable": false,
-            "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
             return '<input ng-click="showSellsDetailDialog('+data+')" id="showSellsDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
@@ -135,7 +133,6 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"ord_det_rem_amount"},
             { "data":"ODID",
             "searchable": false,
-            "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
             return '<input ng-click="showSellDetailDialog('+data+')" id="showSellDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+

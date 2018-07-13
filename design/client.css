@@ -102,3 +102,37 @@ position: center;
 .table th {
   text-align: center;
 }
+
+.dataTables_filter label { 
+	width: 500%;
+	height: 30px;
+	border-radius: 10px;
+	border-color: skyblue;
+
+	margin-bottom: 10px;
+	margin-right: 5px;
+}
+
+
+.dataTables_filter input { 
+	margin-top: 5px;
+	margin-bottom: 10px;
+	width: 90%;
+	height: 30px;
+	border-radius: 10px;
+}
+
+#clientTable , #supplierTable
+{
+	width: 100%;
+}
+
+#clientTable.dataTables_filter , #supplierTable.dataTables_filter 
+{
+	width: 90%;
+}
+
+#clientTable_wrapper.dataTables_wrapper, #supplierTable_wrapper.dataTables_wrapper
+{
+	background-color: lightblue;
+}
