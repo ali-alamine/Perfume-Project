@@ -1,0 +1,1 @@
+UPDATE component SET com_quan=com_quan-('300'/1000)*'2' WHERE IID='1'

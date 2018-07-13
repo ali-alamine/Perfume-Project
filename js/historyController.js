@@ -482,7 +482,7 @@ app.controller('FactureALL', function($scope, $compile) {
                     success : function(response,status) {
                         swal({
                             title: "فاتورة",
-                            text: response["msg"],
+                            text: "تم ا",
                             type: "info",
                             showCancelButton: false,
                             confirmButtonClass: "btn-info",
