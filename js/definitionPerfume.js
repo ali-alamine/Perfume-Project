@@ -11,12 +11,9 @@ app.controller('DefinitionPerfumeALL', function($scope, $compile) {
 
     $scope.updatedDefPerfInfo=[{"item_iid":"","item_name":"","item_cost":0,"item_selling":0,"item_b_IID":"NULL",
     "item_e1_IID":" ","item_e2_IID":" ","item_quan_e1":0,"item_quan_e2":0,"item_quan_a":0}];
-
-
     $scope.alcInfo;
     $scope.totalCost;
     $scope.bottleCapacity;
-
     angular.element(document).ready(function () {
         $scope.getAllBottle();
         $scope.getAllEssence();
@@ -47,7 +44,7 @@ app.controller('DefinitionPerfumeALL', function($scope, $compile) {
             { "data":"item_selling"},
             { "data": "item_IID",
             "searchable": false,
-            "width":"8%",
+             "width": "8%",
             "sortable": false,
             "render": function (data,meta,row) {
              return '<input ng-click="disableDef('+data+')" id="disableDef" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/> <input ng-click="updateModal('+data+')" id="updatePerfume" type="button" class="glyphicon btn-info btn" value="&#xf044" title="تعديل"/> ';}
@@ -88,9 +85,6 @@ app.controller('DefinitionPerfumeALL', function($scope, $compile) {
         $scope.updatedDefPerfInfo[0].item_quan_e1=$scope.editDefPerInfo[0].item_quan_e1;
         $scope.updatedDefPerfInfo[0].item_quan_e2=$scope.editDefPerInfo[0].item_quan_e2;
         $scope.updatedDefPerfInfo[0].item_quan_a=$scope.editDefPerInfo[0].item_quan_a;
-
-
-        
 
         $scope.bottleChangedEdit();
         $scope.essence1NameChangedEdit();

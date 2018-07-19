@@ -103,11 +103,37 @@
             <div class="col-xs-12 tabcontent" id="supplyItemsInput">
                 <form>
                     <div>
-                        <input style="margin-bottom: 10px; font-size: 18px;color: black;" type ="button" class="col-xs-12 btn btn-success mousetrap"  data-toggle="modal" ng-click="addAccModal()" value="+ تعريف اسانس / قناني جديد +"/>
+                        <input style="margin-bottom: 10px; font-size: 18px;color: black;" type ="button" class="col-xs-12 btn btn-success mousetrap"  data-toggle="modal" ng-click="addModal()" value="+ تعريف اسانس / قناني جديد +"/>
                     </div>
                 </form>
                 <table  id="supplyItemsInput" class="table table-responsive table-bordered text-center">
                     <thead>
+                        <tr>
+                            <th style="vertical-align: middle;" rowspan="2" colspan="" class="text-center">إسم المورد:</th>
+                            <td style="vertical-align: middle;" rowspan="2" colspan="">
+                                <!-- <strong>
+                                    <input class="text-center mousetrap" type="text" id="supplierName_items" list="listSupplierName_items" ng-change="getSearchSupply();" ng-model="supplierName_items"/>
+                                </strong>
+                                <datalist id="listSupplierName_items">
+                                    <option ng-repeat="s in allSupplier" data-phone="{{c.phone}}" data-id="{{s.id}}" value="{{s.name}}">
+                                </datalist> -->
+                                <input id="supplierName_items" ng-model="supplierName_items"  list="listSupplierName_items" ng-change="getSearchSupplier()" class="form-control mousetrap" type="text" placeholder="إسم المورد"/>
+                            </td>
+                            <datalist id="listSupplierName_items">
+                                <option ng-repeat="s in getSupplier" data-id="{{s.id}}" value="{{s.name}}">
+                            </datalist>                                
+                            <th rowspan="2" colspan="2"></th>
+                            <th style="vertical-align: middle;" class="text-center">رقم:</th>
+                            <th style="vertical-align: middle;" class="text-center">
+                                <strong><label id="BIToBe"></label></strong>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="vertical-align: middle;" class="text-center">تاريخ:</th>
+                                <th style="vertical-align: middle;" class="text-center">
+                                    <input id="supplyDate_items" ng-model="supplyDate_items" class="form-control text-center mousetrap" type="text" tabindex="150"/>
+                                </th>
+                            </tr>
                         <tr>
                             <th style="vertical-align: middle;" class="text-center">النوع</th>
                             <th style="vertical-align: middle;" class="text-center">الإسم</th>
@@ -174,29 +200,13 @@
                                 <th colspan="6" style="padding: 0px 0px 0px 0px;"><div style="border:solid black 3px;"></th>
                             </tr>
                             <tr>
-                                <td style="vertical-align: middle;" rowspan="2">
-                                    <input id="supplierName_items" ng-model="supplierName_items" list="listSupplierName_items" class="form-control mousetrap" type="text" placeholder="إسم المورد"/>
-                                </td>
-                                <datalist id="listSupplierName_items">
-                                    <option ng-repeat="s in allSupplier" data-id="{{s.id}}" value="{{s.name}}">
-                                </datalist>                                
-                                <!-- <th style="vertical-align: middle;" rowspan="2"></th> -->
-                                <th style="vertical-align: middle;" class="text-center">رقم:</th>
-                                <th style="vertical-align: middle;" class="text-center">
-                                    <strong><label id="BIToBe"></label></strong>
-                                </th>
-                                <th style="vertical-align: middle;" class="text-center" rowspan="">مجموع الشراء: </th>
-                                <th style="vertical-align: middle;" class="text-center" colspan="2">{{totalPriceItems}}</th>
-                            </tr>
-                            <tr>
-                                <th style="vertical-align: middle;" class="text-center">تاريخ:</th>
-                                <th style="vertical-align: middle;" class="text-center">
-                                    <input id="supplyDate_items" ng-model="supplyDate_items" class="form-control text-center mousetrap" type="text" tabindex="150"/>
-                                </th>
+                                <th colspan="2"></th>
                                 <th style="vertical-align: middle;" class="text-center" rowspan="">المبلغ المدفوع: </th>
-                                <td colspan="2">
+                                <td  style="vertical-align: middle;" colspan="">
                                     <input type="number" min="0" id="payPrice_items" ng-model="payPrice_items" ng-value="totalPriceItems" class="form-control text-center mousetrap" placeholder="المبلغ المدفوع"/>
                                 </td>
+                                <th style="vertical-align: middle;" class="text-center" rowspan="">مجموع الشراء: </th>
+                                <th style="vertical-align: middle;" class="text-center" colspan="">{{totalPriceItems}}</th>
                             </tr>
                             <tr>
                                 <td ng-click="addSupplyItems();" colspan="6" class="btn col-xs-6 btn-success" style="vertical-align: middle; font-size:20px;">إدخال</td>

@@ -29,11 +29,15 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"sup_det_rem_amount"},
             { "data":"SDID",
             "searchable": false,
-            "width":"6%",
             "sortable": false,
             "render": function (data,meta,row) {
+<<<<<<< HEAD
             return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/>'+
             '<input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
+=======
+            return '<input ng-click="showSupplyDetailDialog('+data+')" id="showDetails" type="button" class="glyphicon btn-info btn  fa fa-edit" value="&#xf044" title="عرض"/>'+
+            ' <input ng-click="removeFactureSupply('+data+')" id="deleteSupply" type="button" class="glyphicon btn-danger btn" value="&#xe014" title="إلغاء"/>';}}
+>>>>>>> c699cc74285baa024a84f699adbbacc41aeb1f7e
             
         ],
         "oLanguage": {
@@ -82,7 +86,6 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"ord_det_rem_amount"},
             { "data":"ODID",
             "searchable": false,
-            "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
             return '<input ng-click="showSellsDetailDialog('+data+')" id="showSellsDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
@@ -135,7 +138,6 @@ app.controller('FactureALL', function($scope, $compile) {
             { "data":"ord_det_rem_amount"},
             { "data":"ODID",
             "searchable": false,
-            "width":"8%",
             "sortable": false,
             "render": function (data,meta,row) {
             return '<input ng-click="showSellDetailDialog('+data+')" id="showSellDetails" type="button" class="glyphicon btn-info btn" value="&#xf044" title="عرض"/> '+
@@ -475,11 +477,16 @@ app.controller('FactureALL', function($scope, $compile) {
                 var options = {
                     type : "get",
                     url : '../php/history.php',
+<<<<<<< HEAD
                     data: {"function": "removeFacture","id":id},
+=======
+                    data: {"function": "removeFactureSupply","id":id},
+>>>>>>> c699cc74285baa024a84f699adbbacc41aeb1f7e
                     dataType: 'json',
                     async : false,
                     cache : false,
                     success : function(response,status) {
+<<<<<<< HEAD
                         if(response["msg"] == "إلغاء")
                         {
                             swal({
@@ -505,6 +512,18 @@ app.controller('FactureALL', function($scope, $compile) {
                                 closeOnConfirm: true
                         });
                         }
+=======
+                        swal({
+                            title: "فاتورة",
+                            text: "تم ا",
+                            type: "info",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-info",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        }); 
+                        supplyInvoicesTable.ajax.reload(null,false);
+>>>>>>> c699cc74285baa024a84f699adbbacc41aeb1f7e
                     },
                     error:function(request,response,error){
                         swal({

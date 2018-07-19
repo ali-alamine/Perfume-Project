@@ -63,6 +63,11 @@ switch($function){
         getSearchClient();
         closeConn();
     break;
+    case 'getSearchSupplier' :
+        openConn();
+        getSearchSupplier();
+        closeConn();
+    break;
 
 
 	

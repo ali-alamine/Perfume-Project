@@ -5,74 +5,25 @@ $(document).ready(function(){
         $(expD).datepicker({ dateFormat: 'yy-mm-dd' }).val();
     }
     $("#supplyDate_items").datepicker({ dateFormat: 'yy-mm-dd' }).val(cDate);
-    // $("#dechargementDateEssence").datepicker({ dateFormat: 'yy-mm-dd' }).val(cDate);
-    // $("#dechargementDateAlcohol").datepicker({ dateFormat: 'yy-mm-dd' }).val(cDate);
-    // $("#dechargementDateBottle").datepicker({ dateFormat: 'yy-mm-dd' }).val(cDate);
     $("#supplyDate_accessories").datepicker({ dateFormat: 'yy-mm-dd' }).val(cDate);
     $("#supplyItemsInput").show();
     $(".supplyItems").addClass("btn-info");
-    // $("#supplyAlcoholInput").hide();
-    // $("#supplyBottleInput").hide();
     $("#supplyAccessoriesInput").hide();
     var viewSupply="BI";
     displaySupplyCodeType(viewSupply);
     $(".supplyItems").click(function(){
         $("#supplyItemsInput").show(250);
-        // $("#supplyEssenceInput").show(250);
-        // $("#supplyAlcoholInput").hide(250);
-        // $("#supplyBottleInput").hide(250);
         $("#supplyAccessoriesInput").hide(250);
         $(".supplyItems").addClass("btn-info");
-        // $(".supplyAlcohol").removeClass("btn-info");
-        // $(".supplyAlcohol").addClass("btn-default");
-        // $(".supplyBottle").removeClass("btn-info");
-        // $(".supplyBottle").addClass("btn-default");
         $(".supplyAccessories").removeClass("btn-info");
         $(".supplyAccessories").addClass("btn-default");
         viewSupply="BI";
         displaySupplyCodeType(viewSupply);
     });
-    // $(".supplyAlcohol").click(function(){
-    //     $("#supplyEssenceInput").hide(250);
-    //     $("#supplyAlcoholInput").show(250);
-    //     $("#supplyBottleInput").hide(250);
-    //     $("#supplyItemInput").hide(250);
-    //     $(".supplyAlcohol").addClass("btn-info");
-    //     $(".supplyEessence").removeClass("btn-info");
-    //     $(".supplyEessence").addClass("btn-default");
-    //     $(".supplyBottle").removeClass("btn-info");
-    //     $(".supplyBottle").addClass("btn-default");
-    //     $(".supplyItem").removeClass("btn-info");
-    //     $(".supplyItem").addClass("btn-default");
-    //     viewSupply="BA";
-    //     displaySupplyCodeType(viewSupply);
-    // });
-    // $(".supplyBottle").click(function(){
-    //     $("#supplyEssenceInput").hide(250);
-    //     $("#supplyAlcoholInput").hide(250);
-    //     $("#supplyBottleInput").show(250);
-    //     $("#supplyItemInput").hide(250);
-    //     $(".supplyBottle").addClass("btn-info");
-    //     $(".supplyAlcohol").removeClass("btn-info");
-    //     $(".supplyAlcohol").addClass("btn-default");
-    //     $(".supplyEessence").removeClass("btn-info");
-    //     $(".supplyEessence").addClass("btn-default");
-    //     $(".supplyItem").removeClass("btn-info");
-    //     $(".supplyItem").addClass("btn-default");
-    //     viewSupply="BB";
-    //     displaySupplyCodeType(viewSupply);
-    // });
     $(".supplyAccessories").click(function(){
         $("#supplyItemsInput").hide(250);
-        // $("#supplyEssenceInput").hide(250);
-        // $("#supplyAlcoholInput").hide(250);
-        // $("#supplyBottleInput").hide(250);
         $("#supplyAccessoriesInput").show(250);
         $(".supplyAccessories").addClass("btn-info");
-        // $(".supplyAlcohol").removeClass("btn-info");
-        // $(".supplyAlcohol").addClass("btn-default");
-        // $(".supplyBottle").removeClass("btn-info");
-        // $(".supplyBottle").addClass("btn-default");
         $(".supplyItems").removeClass("btn-info");
         $(".supplyItems").addClass("btn-default");
         viewSupply="BA";
@@ -85,7 +36,6 @@ function getDate(){
     hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
     ampm = d.getHours() >= 12 ? 'pm' : 'am',
     months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-    // days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     return d.getFullYear()+'-'+months[d.getMonth()]+'-'+d.getDate();
 }
 function displaySupplyCodeType(viewSupply){
@@ -107,11 +57,6 @@ function displaySupplyCodeType(viewSupply){
                 }else if(viewSupply=="BA"){
                     var idType="BAToBe";
                 }
-                // else if(viewSupply=="BB"){
-                //     var idType="BBToBe";
-                // }else if(viewSupply=="BI"){
-                //     var idType="BIToBe";
-                // }
                 document.getElementById(idType).innerHTML=supply_code_toBe.BcodeToBe;
             },
             error : function(request,response,error){
@@ -130,7 +75,6 @@ function displaySupplyCodeType(viewSupply){
     }
 }
 function inputNull(type,bool){
-    // alert("ooo")
     if(type=='#add' || type=='#capacity'){
         if(bool=="true"){
             $(type).css("border","solid red 1px");
@@ -140,13 +84,6 @@ function inputNull(type,bool){
             $(type).attr("placeholder", "");
         }
     } 
-    // else if(type=='#add' || type=='#capacity'){
-    //     if(bool=="true"){
-    //         $(type).css("border","solid red 1px");
-    //     }else if(bool=="false"){
-    //         $(type).css("border","");
-    //     }
-    // }   
 }
 function check_number(val){
     var num = new RegExp("[0-9]");

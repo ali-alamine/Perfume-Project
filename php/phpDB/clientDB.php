@@ -221,4 +221,26 @@ function getSearchClient(){
 	}
 	echo $jsonData;
 }
+function getSearchSupplier(){
+	$supplierName=$_GET['supplierName'];
+
+	$getSearchsupplierQuery="SELECT SRID,supplier_name FROM supplier WHERE supplier_name LIKE  '".$supplierName."%' OR supplier_name LIKE '% ".$supplierName."%'";
+
+	$getSearchsupplierQuerySQL=mysqli_query(openConn(),$getSearchsupplierQuery);
+	$jsonData = "";
+	if($getSearchsupplierQuerySQL){
+		while($row = mysqli_fetch_assoc($getSearchsupplierQuerySQL)){	
+			if($row != NULL){
+				if($jsonData != ""){
+					$jsonData = $jsonData . ",";
+				}
+				$jsonData = $jsonData . '{"id":"' . $row['SRID'] . '",';
+				$jsonData = $jsonData . '"name":"' . $row['supplier_name'] . '"}';			
+			}
+		}
+		$jsonData = '[' . $jsonData . ']';
+	}
+			// file_put_contents("wwwSupplier.txt",$jsonData);
+	echo $jsonData;
+}
 ?>

@@ -15,6 +15,7 @@ app.controller('DrawerALL', function($scope, $compile) {
 
     drawerDataTable=$('#drawerTable').DataTable({
         "order": [[ 0, "desc" ]],
+        "responsive":true,
         "paging": true,
         "serverSide": true,
         "processing":true,

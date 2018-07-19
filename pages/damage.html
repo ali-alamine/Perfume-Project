@@ -49,17 +49,17 @@
                     <form autocomplete="off">
                         <div class="form-group">
                             <lable style="font-size: 20px;">إسم الاسانس:</lable>
-                            <input  id="essenceName"  list="essencesList" class="form-control" ng-model="essName" >
-                            <datalist id="essencesList" >
-                                <option ng-repeat="e in allEssenceName" data-id="{{e.id}}" value="{{e.essenceName}}">
+                            <input  id="essenceName"  list="essencesList" class="form-control" ng-model="essName" ng-change="searchEssence()" >
+                            <datalist id="essencesList"  >
+                                <option ng-repeat="e in essenceSearchResult" data-id="{{e.id}}"  value="{{e.essenceName}}">
                             </datalist>
                         </div>
                         <div class="form-group">
                             <lable style="font-size: 20px;">الكمية:</lable>
-                            <input id="essenceQuantity" type="number" ng-model="essenceQuantity" class="form-control" placeholder="ملليلتر" min="0" />
+                            <input id="essenceQuantity" type="number" ng-model="essenceQuantity" ng-change="checkQuantity()" class="form-control" placeholder="ملليلتر" min="0" />
                         </div>
                          <div class="form-group">
-                            <button type="submit" ng-click="damageEssence()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="submit" ng-disabled="isDisabledEss" ng-click="damageEssence()" class="btn btn-success col-xs-6">تلف</button>
                             <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
                         </div>
                     </form>
@@ -68,10 +68,10 @@
                     <form>
                         <div class="form-group">
                             <lable style="font-size: 20px;">الكمية:</lable>
-                            <input type="number" id="alcoholQuantity" ng-model="alcoholQuantity" class="form-control" placeholder="ملليلتر" min="0" />
+                            <input type="number" id="alcoholQuantity" ng-model="alcoholQuantity" ng-change="checkQuantity()" class="form-control" placeholder="ملليلتر" min="0" />
                         </div>
                         <div class="form-group">
-                            <button type="submit" ng-click="damageAlcohol()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="submit" ng-disabled="isDisabledAlc" ng-click="damageAlcohol()" class="btn btn-success col-xs-6">تلف</button>
                             <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
                         </div>
                     </form>
@@ -80,17 +80,17 @@
                     <form autocomplete="off" >
                         <div class="form-group">
                             <lable style="font-size: 20px;">نوع القنينة:</lable>
-                            <input id="bottleType" list="bottlesList" class="form-control" ng-model="bottleType">
+                            <input id="bottleType" list="bottlesList" class="form-control" ng-model="bottleType" ng-change="searchBottle()">
                             <datalist id="bottlesList">
-                                <option ng-repeat="b in allBottle" data-id="{{b.id}}" value="{{b.botName}} | {{b.botCapacity}}">
+                                <option ng-repeat="b in bottleSearchResult" data-id="{{b.id}}"  value="{{b.botName}} | {{b.botCapacity}}">
                             </datalist>
                         </div>
                         <div class="form-group">
                             <lable style="font-size: 20px;">الكمية:</lable>
-                            <input id="bottleQuantity" type="number" id="bottleQuantity" ng-model="bottleQuantity" class="form-control" placeholder="قنينة" min="0">
+                            <input id="bottleQuantity" type="number" id="bottleQuantity" ng-model="bottleQuantity" ng-change="checkQuantity()" class="form-control" placeholder="قنينة" min="0">
                         </div>
                         <div class="form-group">
-                            <button type="submit" ng-click="damageBottle()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="submit" ng-disabled="isDisabledBot" ng-click="damageBottle()" class="btn btn-success col-xs-6">تلف</button>
                             <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
                         </div>
                     </form>
@@ -99,17 +99,17 @@
                     <form autocomplete="off">
                         <div class="form-group">
                             <lable style="font-size: 20px;">إسم الإكسسوار:</lable>
-                            <input  id="itemName"  list="accessoriesList" class="form-control" ng-model="itemName">
+                            <input  id="itemName"  list="accessoriesList" class="form-control" ng-model="itemName" ng-change="searchAccessory()">
                             <datalist id="accessoriesList">
-                                <option ng-repeat="a in allAcc" data-id="{{a.id}}" value="{{a.accName}}">
+                                <option ng-repeat="a in accessorySearchResult" data-id="{{a.id}}"  value="{{a.accName}}">
                             </datalist>
                         </div>
                         <div class="form-group">
                             <lable style="font-size: 20px;">الكمية:</lable>
-                            <input id="itemQuantity" type="number" ng-model="itemQuantity" class="form-control" placeholder="قطعة">
+                            <input id="itemQuantity" type="number" ng-model="itemQuantity" ng-change="checkQuantity()" class="form-control" placeholder="قطعة">
                         </div>
                         <div class="form-group">
-                            <button type="submit" ng-click="damageItem()" class="btn btn-success col-xs-6">تلف</button>
+                            <button type="submit" ng-disabled="isDisabledAcc" ng-click="damageItem()" class="btn btn-success col-xs-6">تلف</button>
                             <button type="cancel" id="cancel" class="btn btn-danger col-xs-6">إلغاء</button>
                         </div>
                     </form>

@@ -7,6 +7,7 @@ app.controller('StockALL', function($scope, $compile) {
         "paging": true,
         "serverSide": true,
         "processing":true,
+        'responsive':true,
         "ordering": true,
         "pagingType": "full_numbers",
         "searching": true,
@@ -30,8 +31,7 @@ app.controller('StockALL', function($scope, $compile) {
             },
             { "data":  "com_quan"},
             { "data": "item_cost" },
-            { "data":  "item_selling"},
-            { "data":"supplier_name"}
+            { "data":  "item_selling"}
             
         ],
         "oLanguage": {
@@ -59,7 +59,6 @@ app.controller('StockALL', function($scope, $compile) {
     bottleTable=$('#bottleTable').DataTable({
         "paging": true,
         "serverSide": true,
-        // "deferLoading": 0,
         "processing":true,
         "ordering": true,
         "pagingType": "full_numbers",
@@ -84,8 +83,7 @@ app.controller('StockALL', function($scope, $compile) {
             },
             { "data":  "com_quan"},
             { "data": "item_cost" },
-            { "data":  "item_selling"},
-            { "data":"supplier_name"}
+            { "data":  "item_selling"}
             
         ],
         "oLanguage": {
@@ -114,7 +112,6 @@ app.controller('StockALL', function($scope, $compile) {
         "paging": true,
         "serverSide": true,
         "processing":true,
-        // "deferLoading": 0,
         "ordering": true,
         "pagingType": "full_numbers",
         "searching": true,
@@ -139,8 +136,7 @@ app.controller('StockALL', function($scope, $compile) {
             { "data":  "com_quan"},
             { "data": "item_cost" },
             { "data":  "item_selling"},
-            {"data":"com_date_exp"},
-            { "data":"supplier_name"}
+            {"data":"com_date_exp"}
             
         ],
         "oLanguage": {
