@@ -6,7 +6,6 @@ app.filter('reverse', function() {
     };
 });
 
-
 var supplierTable;
 
 app.controller('Client&SupplierALL', function($scope, $compile) {

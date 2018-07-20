@@ -26,7 +26,7 @@ app.controller('StockALL', function($scope, $compile) {
                     var id=splited[0];
                     var essName = splited[1];
                     var param = id+",'"+essName+"'";
-                    return essName+' <button style="float:right" ng-click="editEssModal('+param+')">تعديل</button>';
+                    return essName +' <button style="float:right" ng-click="editEssModal('+param+')">تعديل</button>';
                 } 
             },
             { "data":  "com_quan"},
@@ -162,14 +162,27 @@ app.controller('StockALL', function($scope, $compile) {
         }
     });
     $scope.editEssModal = function(essID,essName){
-        $('#editModal').modal('show');
-        $('#bottleCapacity').hide();
-        $scope.edit_titleName = "تعديل اسم اسانس";
-        $scope.edit_labelName = "إسم الإسانس";
-        $scope.nameForEdit=essName;
-        $scope.IDForEdit=essID;
-        $("#name").css("border","");
-        $('#name').focus();
+        if(essName!="alcohol"){
+            $('#editModal').modal('show');
+            $('#bottleCapacity').hide();
+            $scope.edit_titleName = "تعديل اسم اسانس";
+            $scope.edit_labelName = "إسم الإسانس";
+            $scope.nameForEdit=essName;
+            $scope.IDForEdit=essID;
+            $("#name").css("border","");
+            $('#name').focus();
+        }
+        else if(essName=="alcohol"){
+            swal({
+                title: "إنتبه",
+                text: "لا تستطيع تعديل إسم الكحول!",
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonClass: "btn-info",
+                confirmButtonText: "نعم",
+                closeOnConfirm: true
+            });
+        }
     };
     $scope.editBotModal=function(id,name){
         var splited = name.split("|", 2);

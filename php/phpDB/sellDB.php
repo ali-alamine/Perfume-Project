@@ -117,19 +117,19 @@ function addOrderSell(){
 	for($i=0;$i<$sizeFacture;$i++){
 		if($factureDetails[$i]['type']=='perfume'){
 			$updateItemPerfume1Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_e1']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_e1']."'";
-    	file_put_contents("www1.txt",$updateItemPerfume1Query);
+    	// file_put_contents("www1.txt",$updateItemPerfume1Query);
 			$updateItemPerfume1QuerySQL=mysqli_query(openConn(),$updateItemPerfume1Query);
 			$updateItemPerfume2Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_a']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='1'";
-    	file_put_contents("www2.txt",$updateItemPerfume2Query);
+    	// file_put_contents("www2.txt",$updateItemPerfume2Query);
 			$updateItemPerfume2QuerySQL=mysqli_query(openConn(),$updateItemPerfume2Query);
 			if($factureDetails[$i]['id_e2']!=null){
 				$updateItemPerfume3Query="UPDATE component SET com_quan=com_quan-('".$factureDetails[$i]['quan_e2']."'/1000)*'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_e2']."'";
-    	file_put_contents("www3.txt",$updateItemPerfume3Query);
+    	// file_put_contents("www3.txt",$updateItemPerfume3Query);
 				$updateItemPerfume3QuerySQL=mysqli_query(openConn(),$updateItemPerfume3Query);
 			}
 			if($factureDetails[$i]['id_b']!=null){
 				$updateItemPerfume4Query="UPDATE component SET com_quan=com_quan-'".$factureDetails[$i]['quantity']."' WHERE IID='".$factureDetails[$i]['id_b']."'";
-    	file_put_contents("www4.txt",$updateItemPerfume4Query);
+    	// file_put_contents("www4.txt",$updateItemPerfume4Query);
 				$updateItemPerfume4QuerySQL=mysqli_query(openConn(),$updateItemPerfume4Query);
 			}
 			if($factureDetails[$i]['item_id']=='new'){
@@ -171,6 +171,9 @@ function addOrderSell(){
 	//update profit order_detail
 	$updateOrderDetailsProfitQuery="UPDATE order_details  SET ord_det_profit='".$totalProfit."' Where ODID='".$ODID."'";
 	$updateOrderDetailsProfitQuerySQL=mysqli_query(openConn(),$updateOrderDetailsProfitQuery);
+	$totalPrice=$orderTotalPrice-$orderRestPrice;
+	$updateDrawerQuery="UPDATE drawer SET drawer_sell_total=drawer_sell_total+'".$totalPrice."', drawer_profit_total=drawer_profit_total+'".$totalProfit."',drawer_total=drawer_total+'".$totalPrice."' WHERE drawer_Date='".$orderDate."'";
+	$updateDrawerQuerySQL=mysqli_query(openConn(),$updateDrawerQuery);
 	echo "{}";
 }
 function addOrderSells(){
@@ -272,7 +275,9 @@ function addOrderSells(){
 	$updateOrderDetailsProfitQuery="UPDATE order_details  SET ord_det_profit='".$totalProfit."' Where ODID='".$ODID."'";
     	// file_put_contents("www3.txt",$updateItemsAlcoholQuery);
 	$updateOrderDetailsProfitQuerySQL=mysqli_query(openConn(),$updateOrderDetailsProfitQuery);
-
+	$totalPrice=$orderTotalPrice-$orderRestPrice;
+	$updateDrawerQuery="UPDATE drawer SET drawer_sell_total=drawer_sell_total+'".$totalPrice."', drawer_profit_total=drawer_profit_total+'".$totalProfit."',drawer_total=drawer_total+'".$totalPrice."' WHERE drawer_Date='".$orderDate."'";
+	$updateDrawerQuerySQL=mysqli_query(openConn(),$updateDrawerQuery);
 	echo "{}";
 }
 function getSearchPerfume(){

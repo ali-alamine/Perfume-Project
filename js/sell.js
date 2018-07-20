@@ -38,8 +38,8 @@ $(document).ready(function(){
             $(".sellItemButton").css("background-color","#00BFFF");  
             $(".sellPerfumeButton").css("background-color","lightblue");
             $(".sellsButton").css("background-color","lightblue");
-            $('#searchItem').animatescroll();
-            $("#searchItem").focus(); 
+            $('#searchAccessories').animatescroll();
+            $("#searchAccessories").focus(); 
             viewFacture='SL';
             displayFactureCodeType(viewFacture);  
         }
