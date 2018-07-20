@@ -106,6 +106,7 @@ app.controller('SupplyALL', function($scope, $http) {
         };
         $.ajax(options);
     };
+    // test git 
     $scope.getAllBottle = function(){
         var options={
             type : "get",
