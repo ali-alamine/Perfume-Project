@@ -280,7 +280,6 @@ function removeFacture(){
 	// mysqli_query(openConn(),$deleteOrderQuery);
 	$deleteOrderDetailsQuery="DELETE FROM order_details WHERE ODID=".$id;
 	mysqli_query(openConn(),$deleteOrderDetailsQuery);
-<<<<<<< HEAD
 	$msg='إلغاء';
 	echo '{"msg":"'.$msg.'"}';
 }
@@ -291,33 +290,10 @@ function removeFactureSupply(){
 	mysqli_query(openConn(),$deleteSupplyQuery);
 	$deleteSupplyDetailsQuery="DELETE FROM supply_detail WHERE SDID=".$id;
 	mysqli_query(openConn(),$deleteSupplyDetailsQuery);
-=======
->>>>>>> c699cc74285baa024a84f699adbbacc41aeb1f7e
 	$msg='إلغاء';
 	echo '{"msg":"'.$msg.'"}';
 }
-function removeFactureSupply(){//checked
-	$id=$_GET['id'];
-	$getSupplyInvoiceItemsQuery=" select sup_IID,sup_quan from supply where sup_SDID = ".$id;
-	$getSupplyInvoiceItemsQuery = mysqli_query(openConn(),$getSupplyInvoiceItemsQuery);
-	$updateComponentQuan="";
-	$con = openConn();
-	if($getSupplyInvoiceItemsQuery){
-		while($row = mysqli_fetch_assoc($getSupplyInvoiceItemsQuery)){	
-			if($row != NULL){
 
-				$updateComponentQuan="UPDATE component SET com_quan = com_quan - ".$row['sup_quan']." WHERE IID = ".$row['sup_IID'];
-				mysqli_query($con,$updateComponentQuan);
-						
-			}
-		}
-	}
-	$deleteQuery="DELETE FROM supply WHERE sup_SDID=".$id;
-	mysqli_query(openConn(),$deleteQuery);
-	$deleteQuery="DELETE FROM supply_detail WHERE SDID=".$id;
-	mysqli_query(openConn(),$deleteQuery);
-	echo "{}";
-}
 ?>
 
 

@@ -83,7 +83,7 @@ function bottleDataTable(){ //checked
 				$jsonData = $jsonData . '"item_name":"' . $row['itemName'] . '",';
 				$jsonData = $jsonData . '"item_cost":"' . $row['itemCost'] . '",';
 				$jsonData = $jsonData . '"item_selling":"' . $row['itemPrice'] . '",';
-				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '"}';
+				$jsonData = $jsonData . '"com_quan":"' . ROUND($row['itemQuan'],3) . '"}';
 			}
 		}
 	}
@@ -129,7 +129,7 @@ function accDataTable(){ //checked
 				$jsonData = $jsonData . '"item_name":"' . $row['itemName'] . '",';
 				$jsonData = $jsonData . '"item_cost":"' . $row['itemCost'] . '",';
 				$jsonData = $jsonData . '"item_selling":"' . $row['itemPrice'] . '",';
-				$jsonData = $jsonData . '"com_quan":"' . $row['itemQuan'] . '",';
+				$jsonData = $jsonData . '"com_quan":"' . ROUND($row['itemQuan'],3) . '",';
 				$jsonData = $jsonData . '"com_date_exp":"' . $row['itemDate'] . '"}';
 			}
 		}

@@ -193,41 +193,6 @@ app.controller('SupplyALL', function($scope, $http) {
         inputNull("#capacity", 'false');
         $('#add').focus();
     };
-    $scope.getSearchSupplier = function(){
-        // alert($scope.supplierName_items)
-        var idSupply = $('#listSupplierName_items option').filter(function() {
-            return this.value == $scope.supplierName_items;
-        }).data('id');
-        idSupply = idSupply ? idSupply : 'noId';
-        if(idSupply=='noId' && $scope.supplierName_items!=undefined){
-            var options={
-                type : "get",
-                url : "../php/client.php",
-                data: {"function":"getSearchSupplier",'supplierName':$scope.supplierName_items},
-                dataType: 'json',
-                async : false,
-                cache : false,
-                success : function(response,status) {
-                    $scope.getSupplier=response;
-                    $scope.safeApply(function() {});
-                },
-                error:function(request,response,error){
-                    swal({
-                      title: "Please contact your software developer",
-                      text: "ERROR: " + error,
-                      type: "warning",
-                      showCancelButton: false,
-                      confirmButtonClass: "btn-info",
-                      confirmButtonText: "Ok",
-                      closeOnConfirm: true
-                    });
-                }
-            };
-            $.ajax(options);
-        } else{
-            $scope.getSupplier=null;
-        }
-    };
     $scope.addAccModal = function(){
         $('#addAccModal').modal('show');
         $scope.typeModal="accessories";
@@ -441,18 +406,13 @@ app.controller('SupplyALL', function($scope, $http) {
             }
         }
         if(lengthSupplyItemsNoEmpty!=0){
-            // var supplierName=$scope.supplierName_items;
-            // if(supplierName!="" && supplierName!=undefined){
-                // var listSupplierName=;
-                var supplierId = $('#listSupplierName_items option').filter(function() {
-                    return this.value == $scope.supplierName_items;
-                }).data('id');
-                alert(supplierId)
-                supplierId = supplierId ?supplierId : 'noId';
-                if(supplierId =="noId" && $scope.supplierName_items!=''){
-                    msg+="مورد '"+supplierName+"' : غيل مسجل. \n";
-                }
-            else{
+            var supplierId = $('#listSupplierName_items option').filter(function() {
+                return this.value == $scope.supplierName_items;
+            }).data('id');
+            supplierId = supplierId ?supplierId : 'noId';
+            if(supplierId =="noId" && $scope.supplierName_items!=null){
+                msg+="مورد '"+supplierName+"' : غيل مسجل. \n";
+            } else if($scope.supplierName_items==null){
                 msg+="مورد : معلومات ناقصة. \n";
             }
             var supplyDate = $('#supplyDate_items').val();
@@ -571,17 +531,26 @@ app.controller('SupplyALL', function($scope, $http) {
             }
         }
         if(lengthSupplyAccessoriesNoEmpty!=0){
-            var supplierName=$('#supplierName_accessories').val();
-            if(supplierName!="" && supplierName!=undefined){
-                var listSupplierName='#listSupplierName_accessories'+' option';
-                var id = $(listSupplierName).filter(function() {
-                    return this.value == supplierName;
-                }).data('id');
-                var supplierId = id ?id : 'noId';
-                if(supplierId =="noId"){
-                    msg+="مورد '"+supplierName+"' : غيل مسجل. \n";
-                }
-            }else{
+            // var supplierName=$('#supplierName_accessories').val();
+            // if(supplierName!="" && supplierName!=undefined){
+            //     var listSupplierName='#listSupplierName_accessories'+' option';
+            //     var id = $(listSupplierName).filter(function() {
+            //         return this.value == supplierName;
+            //     }).data('id');
+            //     var supplierId = id ?id : 'noId';
+            //     if(supplierId =="noId"){
+            //         msg+="مورد '"+supplierName+"' : غيل مسجل. \n";
+            //     }
+            // }else{
+            //     msg+="مورد : معلومات ناقصة. \n";
+            // }
+            var supplierId = $('#listSupplierName_items option').filter(function() {
+                return this.value == $scope.supplierName_items;
+            }).data('id');
+            supplierId = supplierId ?supplierId : 'noId';
+            if(supplierId =="noId" && $scope.supplierName_items!=null){
+                msg+="مورد '"+supplierName+"' : غيل مسجل. \n";
+            } else if($scope.supplierName_items==null){
                 msg+="مورد : معلومات ناقصة. \n";
             }
             var supplyDate = $('#supplyDate_accessories').val();
@@ -676,5 +645,39 @@ app.controller('SupplyALL', function($scope, $http) {
         $scope.supplyDate_accessories=getDate();
         $scope.totalPriceAccessories='';
     }
-    
+    $scope.getSearchSupplier = function(){
+        // alert($scope.supplierName_items)
+        var idSupply = $('#listSupplierName_items option').filter(function() {
+            return this.value == $scope.supplierName_items;
+        }).data('id');
+        idSupply = idSupply ? idSupply : 'noId';
+        if(idSupply=='noId' && $scope.supplierName_items!=undefined && $scope.supplierName_items!=''){
+            var options={
+                type : "get",
+                url : "../php/client.php",
+                data: {"function":"getSearchSupplier",'supplierName':$scope.supplierName_items},
+                dataType: 'json',
+                async : false,
+                cache : false,
+                success : function(response,status) {
+                    $scope.getSupplier=response;
+                    $scope.safeApply(function() {});
+                },
+                error:function(request,response,error){
+                    swal({
+                      title: "Please contact your software developer",
+                      text: "ERROR: " + error,
+                      type: "warning",
+                      showCancelButton: false,
+                      confirmButtonClass: "btn-info",
+                      confirmButtonText: "Ok",
+                      closeOnConfirm: true
+                    });
+                }
+            };
+            $.ajax(options);
+        } else if($scope.supplierName_items==undefined || $scope.supplierName_items==''){
+            $scope.getSupplier=null;
+        }
+    };
 });
